@@ -20,8 +20,8 @@
   <text x="913" y="905" font-size="14" fill="#7a664e">③ 露台防护不得擅改外立面</text>
   <text x="897" y="962" font-size="13" fill="#7b8e83">本图是功能叠加示意，不是施工图。</text>
   <text x="897" y="988" font-size="13" fill="#7b8e83">家具位置需现场复尺后再调整。</text>
-  <rect x="434" y="143" width="68" height="126" rx="13" fill="none" stroke="#c67b61" stroke-width="3" stroke-dasharray="9 7"/>
-  <text x="507" y="163" font-size="12" font-weight="800" fill="#a85c40">竖向岛台</text>
+  <rect x="479" y="179" width="68" height="112" rx="13" fill="none" stroke="#c67b61" stroke-width="3" stroke-dasharray="9 7"/>
+  <text x="552" y="201" font-size="12" font-weight="800" fill="#a85c40">竖向岛台</text>
   <g><circle cx="703" cy="391" r="25" fill="#d28b55" opacity=".15"/><circle cx="703" cy="391" r="16" fill="#d28b55" stroke="white" stroke-width="3"/><text x="703" y="396" font-size="16" font-weight="800" fill="white" text-anchor="middle">1</text></g>
   <g><circle cx="601" cy="100" r="25" fill="#5799aa" opacity=".15"/><circle cx="601" cy="100" r="16" fill="#5799aa" stroke="white" stroke-width="3"/><text x="601" y="105" font-size="16" font-weight="800" fill="white" text-anchor="middle">2</text></g>
   <g><circle cx="590" cy="705" r="25" fill="#668f78" opacity=".15"/><circle cx="590" cy="705" r="16" fill="#668f78" stroke="white" stroke-width="3"/><text x="590" y="710" font-size="16" font-weight="800" fill="white" text-anchor="middle">3</text></g>
