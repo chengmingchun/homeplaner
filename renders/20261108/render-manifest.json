@@ -1,0 +1,69 @@
+{
+  "source": "F:\\ai\\家居\\homeplaner\\models\\home-21101.blend",
+  "surveyed": false,
+  "renderer": "Blender Cycles",
+  "draft": false,
+  "notes": "Same wall, door and main furniture plan; finish/lighting/appliance details added. Unmeasured concept. Fridge moved clear of partition. Window background is neutral lighting only, not a verified site view.",
+  "shots": [
+    {
+      "file": "01-living-to-kitchen.png",
+      "caption": "From living room: dining island, wall-end U counter, kitchen and study",
+      "cameraSourceCoordinates": [
+        360,
+        740,
+        1.55
+      ],
+      "targetSourceCoordinates": [
+        365,
+        300,
+        1.35
+      ],
+      "lensMm": 24
+    },
+    {
+      "file": "02-wall-wrap-counter.png",
+      "caption": "Furniture notch wraps the intact bearing wall; kitchen and study sides",
+      "cameraSourceCoordinates": [
+        450,
+        405,
+        1.52
+      ],
+      "targetSourceCoordinates": [
+        336,
+        311,
+        1.05
+      ],
+      "lensMm": 30
+    },
+    {
+      "file": "03-study-to-living.png",
+      "caption": "From study: boardgame area, counter, island, living room and terrace",
+      "cameraSourceCoordinates": [
+        455,
+        140,
+        1.5
+      ],
+      "targetSourceCoordinates": [
+        380,
+        600,
+        1.33
+      ],
+      "lensMm": 24
+    },
+    {
+      "file": "04-dining-and-living.png",
+      "caption": "From dining area: dining island and soft L sofa facing east TV",
+      "cameraSourceCoordinates": [
+        260,
+        380,
+        1.55
+      ],
+      "targetSourceCoordinates": [
+        435,
+        678,
+        1.22
+      ],
+      "lensMm": 25
+    }
+  ]
+}

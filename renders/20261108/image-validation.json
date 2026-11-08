@@ -1,0 +1,34 @@
+{
+  "01-living-to-kitchen.png": {
+    "pixels": [
+      2000,
+      1250
+    ],
+    "sha256": "7c3414e7e188f88c5f7c57a6d0d7b819102802073183f8fc6fa07ea82ce9cf08",
+    "bytes": 2587792
+  },
+  "02-wall-wrap-counter.png": {
+    "pixels": [
+      2000,
+      1250
+    ],
+    "sha256": "6c4f9b300af32acc28502e91518a1679bdadd42f3343c0bebfa1ac7481897d2d",
+    "bytes": 2621955
+  },
+  "03-study-to-living.png": {
+    "pixels": [
+      2000,
+      1250
+    ],
+    "sha256": "4a3a3977b240496fe5f5a797d7441fd5b373ce7ba92bf7bb51e263ee731f4701",
+    "bytes": 2656094
+  },
+  "04-dining-and-living.png": {
+    "pixels": [
+      2000,
+      1250
+    ],
+    "sha256": "44bb8ac278c0059016c04aeeeecfd654c5af5452f74383fd2fd0ef0df490f6a7",
+    "bytes": 2707877
+  }
+}

@@ -23,7 +23,7 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html model.html model-viewer.js _site/
-          cp -r models vendor _site/
+          cp -r models vendor renders _site/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
