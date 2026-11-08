@@ -1,0 +1,24 @@
+{
+  "MasterBed_mattress": [
+    1.8,
+    2.0,
+    0.2
+  ],
+  "GuestNWBed_mattress": [
+    1.5,
+    2.0,
+    0.2
+  ],
+  "MasterWardrobeWest": [
+    1.8,
+    0.56,
+    2.35
+  ],
+  "WasherBody_SouthKitchen": [
+    0.6,
+    0.62,
+    0.84
+  ],
+  "bathrooms": 2,
+  "fullWallHeight": 2.8
+}

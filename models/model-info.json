@@ -1,0 +1,14 @@
+{
+  "status": "CONCEPT - no measured internal dimensions; nominal furniture sizes, uncertain walls/clearances not approved",
+  "nominalCoordinateScale": 0.015426170468187275,
+  "notSurveyed": true,
+  "wallHeight": 2.8,
+  "objects": 768,
+  "meshes": 758,
+  "bathrooms": 2,
+  "variants": [
+    "PartitionClosed",
+    "PartitionFolded"
+  ],
+  "source": "Blender 4.5 authoring script"
+}

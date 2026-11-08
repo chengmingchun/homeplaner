@@ -1,0 +1,34 @@
+{
+  "units": "m",
+  "surveyed": false,
+  "masterMattress": [
+    1.8,
+    2.0,
+    0.2
+  ],
+  "guestMattress": [
+    1.5,
+    2.0,
+    0.2
+  ],
+  "wardrobeDepth": 0.56,
+  "wardrobeHeight": 2.35,
+  "deskHeight": 0.795,
+  "deskDepth": 0.65,
+  "diningIsland": [
+    2.05,
+    1.0,
+    0.795
+  ],
+  "boardgameTable": [
+    1.75,
+    0.9,
+    0.825
+  ],
+  "sofaSeatHeight": 0.44,
+  "sofaBackHeight": 0.92,
+  "barHeight": 0.96,
+  "barSeatHeight": 0.72,
+  "doorHeight": 2.12,
+  "wallHeight": 2.8
+}

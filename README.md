@@ -32,3 +32,9 @@
 `planning.html` 收录阶段概念方案，五张平面示意及两张同源3D视图；`budget.csv` 为三档总额分配，`plan-model.json` 为共享几何导出。`verify.cjs` 可通过 Node.js 运行，核对渲染、控件及房间逻辑。
 
 无实测尺寸，所有视图为概念比例，禁止据图量房或施工；写实室内效果及精确通道验证待测量后深化。
+
+## Blender 三维模型
+
+在线入口：[打开模型](https://chengmingchun.github.io/homeplaner/model.html)。Blender 原文件、GLB、建模脚本与使用说明放在 `models/`。模型按最新方案更新：主卫比例收紧、洗衣机南移、北侧开放功能间、波浪形移动花箱。
+
+这版没有实测净尺寸，不作为测绘或施工模型。北侧活动隔断仅为条件方案，厨房与书房之间承重墙保留。
