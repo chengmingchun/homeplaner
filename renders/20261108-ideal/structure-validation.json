@@ -1,0 +1,48 @@
+{
+  "MasterBed_mattress": [
+    1.8,
+    2.0,
+    0.2
+  ],
+  "GuestNWBed_mattress": [
+    1.5,
+    2.0,
+    0.2
+  ],
+  "MasterWardrobeWest": [
+    1.8,
+    0.56,
+    2.35
+  ],
+  "WasherBody_SouthKitchen": [
+    0.6,
+    0.62,
+    0.84
+  ],
+  "CoffeeBarStone": [
+    1.65,
+    0.7,
+    0.035
+  ],
+  "DiningIslandStone": [
+    2.0,
+    0.9,
+    0.04
+  ],
+  "nominalBarToChairBackGapM": 1.047,
+  "bathrooms": 2,
+  "duplicateStorageWall": false,
+  "barStools": 0,
+  "conceptFloorPatchM2": {
+    "StudyGames": 14.33,
+    "KitchenUtility": 12.42,
+    "TerraceFloor": 30.37
+  },
+  "notSurveyed": true,
+  "southFacadeJunctionsClosed": true,
+  "southClosedGlazingPanels": 3,
+  "bearingWallFullPrismVolumeM3": 1.775244,
+  "barWallIntersectionM3": 0.0,
+  "wallNotCut": true,
+  "barWrapsWallEnd": true
+}

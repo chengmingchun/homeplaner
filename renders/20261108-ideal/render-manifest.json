@@ -1,0 +1,23 @@
+{
+  "source": "F:\\ai\\\u5bb6\u5c45\\homeplaner\\renders\\20261108\\interior-styled.blend",
+  "renderer": "Blender Cycles",
+  "resolution": [
+    2560,
+    1440
+  ],
+  "camera": [
+    [
+      240,
+      775,
+      1.6
+    ],
+    [
+      500,
+      418,
+      1.34
+    ],
+    20.5
+  ],
+  "surveyed": false,
+  "note": "Finish and lived-in styling only; source architecture, bearing wall, bar and main furniture locations retained. Dimensions not surveyed."
+}
