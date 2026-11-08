@@ -3,14 +3,14 @@
   "nominalCoordinateScale": 0.015426170468187275,
   "notSurveyed": true,
   "wallHeight": 2.8,
-  "objects": 768,
-  "meshes": 758,
+  "objects": 786,
+  "meshes": 776,
   "bathrooms": 2,
   "variants": [
     "PartitionClosed",
     "PartitionFolded"
   ],
   "source": "Blender 4.5 authoring script",
-  "revision": "2026-11-08-proportion-and-coffee-bar",
+  "revision": "2026-11-08-south-facade-wall-wrap-bar",
   "terraceReferenceArea": 30.36
 }

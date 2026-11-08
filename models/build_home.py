@@ -21,6 +21,11 @@ M['Glass']=material('Glass','#bbd5db',.12,0);bs=M['Glass'].node_tree.nodes.get('
 try:M['Glass'].surface_render_method='DITHERED'
 except:pass
 
+M['SouthGlass']=material('SouthGlass','#b5c7cc',.18,0)
+M['SouthGlass'].node_tree.nodes.get('Principled BSDF').inputs['Alpha'].default_value=.43
+try:M['SouthGlass'].surface_render_method='DITHERED'
+except:pass
+
 def group(name):
  o=bpy.data.objects.new(name,None);bpy.context.collection.objects.link(o);return o
 G={n:group(n) for n in ['Architecture','Furniture','Terrace','PartitionClosed','PartitionFolded','Glazing','Doors']}
@@ -81,13 +86,24 @@ def door(name,v):
  segment(name+'_lintel',v,H-2.2,2.2,.15)
  return o
 
-def window(name,v,sill=.8,top=2.3):
+def window(name,v,sill=.8,top=2.3,closed=False):
  segment('Wall_'+name+'_sill',v,sill,0);segment('Wall_'+name+'_head',v,H-top,top)
- segment(name+'_glass',v,top-sill,sill,.018,'Glass','Glazing')
+ glass=segment(name+'_glass',v,top-sill,sill,.018,'SouthGlass' if closed else 'Glass','Glazing');glass['closedGlazing']=closed
  for z in [sill,top]:segment(name+'_frame',v,.045,z,.05,'Metal','Glazing')
  a,b=xy(v[0],v[1]),xy(v[2],v[3])
  for t in [0,.5,1]:
   p=Vector(a).lerp(Vector(b),t);cube(name+'_mullion',p.x,p.y,sill,.04,.04,top-sill,'Metal',0,'Glazing')
+ if closed:
+  # Complete the reveal and threshold, while retaining the original glazed opening.
+  for t in [0,1]:
+   point=Vector(a).lerp(Vector(b),t)
+   post=cube('Wall_'+name+'_reveal',point.x,point.y,0,.09,.15,top,'Plaster',0,'Architecture')
+   for vert in post.data.vertices:vert.co.z+=post.location.z
+   post.location.z=0;post['wall']=True;post['designHeight']=H
+  segment(name+'_lower_track',v,.025,sill,.11,'Metal','Glazing')
+  segment(name+'_upper_track',v,.035,top-.035,.10,'Metal','Glazing')
+  segment(name+'_threshold',v,.025,.02,.17,'Stone','Glazing')
+
 
 outline=[(183,10),(367,10),(367,42),(779,42),(779,420),(833,420),(833,790),(586,790),(586,886),(584,899),(576,921),(563,937),(549,946),(534,950),(32,950),(17,944),(17,744),(0,744),(0,542),(85,542),(85,317),(162,317),(162,181),(183,181)]
 poly('Foundation',outline,-.2,.18,'Stone')
@@ -102,15 +118,17 @@ rooms={
  'KitchenUtility':([(183,10),(367,10),(367,42),(341,42),(341,317),(162,317),(162,181),(183,181)],'Stone'),
  'TerraceFloor':([(17,744),(202,744),(202,790),(586,790),(586,886),(584,899),(576,921),(563,937),(549,946),(534,950),(32,950),(17,944)],'Stone')}
 for n,(pts,mat) in rooms.items():poly('Floor_'+n,pts,-.015,.035,mat)
-outer=[[183,10,230,10],[335,10,367,10],[367,10,367,42],[367,42,390,42],[530,42,615,42],[745,42,779,42],[779,42,779,420],[779,420,833,420],[833,420,833,790],[833,790,800,790],[615,790,586,790],[0,744,0,542],[0,542,85,542],[85,542,85,317],[85,317,100,317],[153,317,162,317],[162,317,162,181],[162,181,183,181],[183,181,183,10]]
-inside=[[341,43,341,317],[341,42,367,42],[560,43,560,70],[560,290,560,318],[568,318,578,318],[628,318,640,318],[635,323,635,345],[635,398,635,424],[635,325,779,325],[635,424,833,424],[567,424,567,506],[567,506,630,506],[685,506,833,506],[567,506,567,548],[567,609,567,790],[85,430,205,430],[205,430,205,450],[205,500,205,538],[85,538,205,538],[202,542,202,744],[0,542,140,542],[194,542,202,542],[202,779,264,779],[492,779,567,779]]
-for i,v in enumerate(outer+inside):segment('Wall_%03d'%i,v)
+outer=[[183,10,230,10],[335,10,367,10],[367,10,367,42],[367,42,390,42],[530,42,615,42],[745,42,779,42],[779,42,779,420],[779,420,833,420],[833,420,833,790],[833,790,800,790],[615,790,567,790],[0,744,0,542],[0,542,85,542],[85,542,85,317],[85,317,100,317],[153,317,162,317],[162,317,162,181],[162,181,183,181],[183,181,183,10]]
+inside=[[341,43,341,317],[341,42,367,42],[560,43,560,70],[560,290,560,318],[568,318,578,318],[628,318,640,318],[635,323,635,345],[635,398,635,424],[635,325,779,325],[635,424,833,424],[567,424,567,506],[567,506,630,506],[685,506,833,506],[567,506,567,548],[567,609,567,790],[85,430,205,430],[205,430,205,450],[205,500,205,538],[85,538,205,538],[202,542,202,790],[0,542,140,542],[194,542,202,542],[202,790,264,790],[492,790,567,790]]
+for i,v in enumerate(outer+inside):
+ wall=segment('Wall_%03d'%i,v);wall['planSegment']=v
+ if v==[341,43,341,317]:wall['bearing']=True
 # Verify important topology instead of guessing new openings.
 G['Architecture']['bearingWall']='Kitchen / study x=341, intact; north partition alteration unverified'
 for name,v in [('Entry_NorthFacing',[100,317,153,317]),('GuestNW_South',[578,318,628,318]),('CommonBath_East',[635,345,635,398]),('MasterBath_South',[630,506,685,506]),('MasterBedroom_East',[567,548,567,609]),('Storage',[205,450,205,500]),('GuestSE_North',[140,542,194,542])]:door('Door_'+name,v)
-window('UtilityNorth',[230,10,335,10]);window('StudyNorth',[390,42,530,42]);window('GuestNWNorth',[615,42,745,42]);window('MasterSouth',[615,790,800,790],.12,2.3)
-window('GuestSESouth',[0,744,202,744],.12,2.3)
-window('LivingTerrace',[264,779,492,779],.06,2.3)
+window('UtilityNorth',[230,10,335,10]);window('StudyNorth',[390,42,530,42]);window('GuestNWNorth',[615,42,745,42]);window('MasterSouth',[615,790,800,790],.12,2.3,closed=True)
+window('GuestSESouth',[0,744,202,744],.12,2.3,closed=True)
+window('LivingTerrace',[264,790,492,790],.06,2.3,closed=True)
 # North-room movable partition: proposed opening, not a permit to cut structural walls.
 for i in range(5):
  a=70+i*44;b=a+43
@@ -199,7 +217,7 @@ a,b=xy(207,282)
 ellipsoid('WasherBlackHatch',a-.307,b,.43,.017,.205,.205,'Metal');ellipsoid('WasherGlass',a-.326,b,.43,.009,.157,.157,'Screen')
 c('WasherCounter',207,282,.88,.65,.65,.045,'Stone',.012)
 c('Fridge',337,52,.02,.66,.70,1.9,'White',.025)
-# A slim round-ended coffee bar touches the south end of the intact bearing wall.
+# A fitted coffee bar wraps the intact bearing wall end.
 # It has no stools in the dining-chair circulation zone.
 def rounded_slab(name,x,z,w,d,base,h,mat,r=.18):
  a,b=xy(x,z);r=min(r,w/2,d/2);pts=[]
@@ -210,13 +228,26 @@ def rounded_slab(name,x,z,w,d,base,h,mat,r=.18):
  faces=[tuple(range(n-1,-1,-1)),tuple(range(n,n*2))]+[(i,(i+1)%n,(i+1)%n+n,i+n) for i in range(n)]
  mesh=bpy.data.meshes.new(name);mesh.from_pydata(verts,[],faces);mesh.update();o=bpy.data.objects.new(name,mesh);bpy.context.collection.objects.link(o);attach(o,name,mat)
  return o
-rounded_slab('CoffeeBarStone',341,333.25,1.50,.50,.865,.035,'Stone',.20)
-c('CoffeeBarOakEnd',383,333.25,.03,.035,.39,.835,'Oak',.01)
-a,b=xy(299,333.25);rod('CoffeeBarSlimSupport',(a,b,.03),(a,b,.865),.022,'Metal')
+# Counter wraps the south end and both faces of the uncut bearing wall.
+wall_x,wall_y=xy(341,317)
+bar_z=317+.07/S
+bar=rounded_slab('CoffeeBarStone',341,bar_z,1.65,.70,.865,.035,'Stone',.12)
+# The notch belongs to the furniture; the structural wall stays a complete prism.
+notch=cube('CounterNotchTool',wall_x,wall_y+.15,.78,.17,.312,.20,None,0,None)
+mod=bar.modifiers.new('Fitted around intact wall','BOOLEAN');mod.operation='DIFFERENCE';mod.solver='EXACT';mod.object=notch
+bpy.context.view_layer.objects.active=bar;bpy.ops.object.modifier_apply(modifier=mod.name)
+bpy.data.objects.remove(notch,do_unlink=True)
+bar['wrapsWallEnd']=True;bar['wallNotCut']=True
+for side in [-1,1]:
+ cube('BarWallSideCladding',wall_x+side*.091,wall_y+.12,.025,.026,.30,.84,'Oak',.005)
+cube('BarWallEndCladding',wall_x,wall_y-.019,.025,.208,.026,.84,'Oak',.005)
+# Concealed support is within the furniture base, with no freestanding outer leg.
+cube('CoffeeBarFittedCabinet',wall_x+.40,wall_y-.02,.025,.52,.54,.84,'Oak',.018)
+cube('CoffeeBarCabinetDoor',wall_x+.40,wall_y-.30,.04,.49,.018,.80,'Oak',.01)
 # A compact coffee station makes this a useful transition counter.
-c('CoffeeMachine',310,333,.90,.20,.25,.27,'Metal',.025)
-c('CoffeeMachineFront',310,341,1.00,.15,.015,.13,'Walnut',.01)
-c('CoffeeDripTray',310,345,.905,.18,.11,.016,'Metal',.005)
+c('CoffeeMachine',310,327,.90,.20,.25,.27,'Metal',.025)
+c('CoffeeMachineFront',310,335,1.00,.15,.015,.13,'Walnut',.01)
+c('CoffeeDripTray',310,339,.905,.18,.11,.016,'Metal',.005)
 for xx in [355,370]:
  a,b=xy(xx,334);bpy.ops.mesh.primitive_cylinder_add(vertices=24,radius=.038,depth=.075,location=(a,b,.95));attach(bpy.context.object,'CoffeeCup','White')
  bpy.ops.mesh.primitive_cylinder_add(vertices=24,radius=.032,depth=.004,location=(a,b,.989));attach(bpy.context.object,'CoffeeSurface','Soil')
@@ -290,7 +321,7 @@ table('TerraceSideTable',345,847,.46,.46,.43)
 scene=bpy.context.scene;scene.unit_settings.system='METRIC';scene.unit_settings.scale_length=1
 scene['status']='CONCEPT - no measured internal dimensions; nominal furniture sizes, uncertain walls/clearances not approved'
 scene['orientation']='North +Y. Entry on right foyer north horizontal edge. Master SW, kitchen NE.'
-scene['model_revision']='2026-11-08-proportion-and-coffee-bar'
+scene['model_revision']='2026-11-08-south-facade-wall-wrap-bar'
 scene['room_count']='Four original rooms, one used as open study; TWO bathrooms'
 scene.world.use_nodes=True;scene.world.node_tree.nodes['Background'].inputs[0].default_value=(.75,.79,.82,1);scene.world.node_tree.nodes['Background'].inputs[1].default_value=.65
 for loc,power,size in [((1,-4,14),2200,10),((-7,6,12),1700,8)]:
@@ -313,7 +344,7 @@ bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'home-21101.blend'))
 import logging
 logging.getLogger('io_scene_gltf2').setLevel(logging.ERROR)
 bpy.ops.export_scene.gltf(filepath=str(OUT/'home-21101-raw.glb'),export_format='GLB',export_extras=True,export_cameras=False,export_lights=False,use_visible=False,export_apply=True)
-dimensions={'units':'m','surveyed':False,'masterMattress':[1.8,2.0,.20],'guestMattress':[1.5,2.0,.20],'wardrobeDepth':.56,'wardrobeHeight':2.35,'deskHeight':.75,'deskDepth':.65,'diningIsland':[2.0,.90,.75],'boardgameTable':[1.80,.90,.75],'sofaSeatHeight':.44,'sofaBackHeight':.92,'coffeeBar':[1.50,.50,.90],'coffeeBarStools':0,'doorHeight':2.12,'wallHeight':H}
+dimensions={'units':'m','surveyed':False,'masterMattress':[1.8,2.0,.20],'guestMattress':[1.5,2.0,.20],'wardrobeDepth':.56,'wardrobeHeight':2.35,'deskHeight':.75,'deskDepth':.65,'diningIsland':[2.0,.90,.75],'boardgameTable':[1.80,.90,.75],'sofaSeatHeight':.44,'sofaBackHeight':.92,'coffeeBar':[1.65,.70,.90],'barWrapNotchWidth':.17,'bearingWallThickness':.15,'coffeeBarStools':0,'doorHeight':2.12,'wallHeight':H}
 (OUT/'nominal-dimensions.json').write_text(json.dumps(dimensions,indent=2),encoding='utf-8')
 manifest={'status':scene['status'],'nominalCoordinateScale':S,'notSurveyed':True,'wallHeight':H,'objects':len(bpy.data.objects),'meshes':len([o for o in bpy.data.objects if o.type=='MESH']),'bathrooms':2,'variants':['PartitionClosed','PartitionFolded'],'source':'Blender 4.5 authoring script','revision':scene['model_revision'],'terraceReferenceArea':30.36}
 (OUT/'model-info.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
