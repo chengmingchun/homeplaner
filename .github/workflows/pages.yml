@@ -22,7 +22,7 @@ jobs:
       - name: Prepare website
         run: |
           mkdir -p _site
-          cp *.html *.jpg *.png *.svg *.json *.csv *.js _site/
+          cp index.html model.html model-viewer.js _site/
           cp -r models vendor _site/
       - uses: actions/upload-pages-artifact@v3
         with:
