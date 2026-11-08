@@ -1,0 +1,60 @@
+{
+  "status": "Unsurveyed concept floor patches. They are not net measured areas and must not be summed or equated to gross building area. Bedroom ratios remain uncertain.",
+  "grossBuildingAreaProvidedM2": 129.83,
+  "items": [
+    {
+      "region": "MasterBedroom",
+      "conceptFloorPatchM2": 17.98,
+      "providedReferenceM2": 17.32,
+      "verified": false
+    },
+    {
+      "region": "MasterBath",
+      "conceptFloorPatchM2": 5.19,
+      "providedReferenceM2": null,
+      "verified": false
+    },
+    {
+      "region": "GuestBedroomNW",
+      "conceptFloorPatchM2": 13.78,
+      "providedReferenceM2": 11.14,
+      "verified": false
+    },
+    {
+      "region": "StudyGames",
+      "conceptFloorPatchM2": 14.33,
+      "providedReferenceM2": 14.19,
+      "verified": false
+    },
+    {
+      "region": "CommonBath",
+      "conceptFloorPatchM2": 3.27,
+      "providedReferenceM2": null,
+      "verified": false
+    },
+    {
+      "region": "GuestBedroomSE",
+      "conceptFloorPatchM2": 9.71,
+      "providedReferenceM2": 11.47,
+      "verified": false
+    },
+    {
+      "region": "Living",
+      "conceptFloorPatchM2": 47.35,
+      "providedReferenceM2": 47.88,
+      "verified": false
+    },
+    {
+      "region": "KitchenUtility",
+      "conceptFloorPatchM2": 12.42,
+      "providedReferenceM2": 11.5,
+      "verified": false
+    },
+    {
+      "region": "TerraceFloor",
+      "conceptFloorPatchM2": 30.37,
+      "providedReferenceM2": 30.36,
+      "verified": false
+    }
+  ]
+}

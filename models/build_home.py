@@ -5,6 +5,8 @@ random.seed(21)
 OUT=Path(__file__).resolve().parent
 S=12.85/833
 H=2.8
+# Concept calibration from the supplied terrace area, not surveyed dimensions.
+TERRACE_STRETCH=1.32125
 bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
 for d in list(bpy.data.materials):bpy.data.materials.remove(d)
 
@@ -24,7 +26,9 @@ def group(name):
 G={n:group(n) for n in ['Architecture','Furniture','Terrace','PartitionClosed','PartitionFolded','Glazing','Doors']}
 G['PartitionFolded']['defaultHidden']=True
 
-def xy(x,z):return ((416.5-x)*S,(481-z)*S)
+def xy(x,z):
+ if z>790:z=790+(z-790)*TERRACE_STRETCH
+ return ((416.5-x)*S,(481-z)*S)
 def attach(o,name,mat,parent='Furniture'):
  o.name=name
  if mat:o.data.materials.append(M[mat])
@@ -91,18 +95,18 @@ rooms={
  'MasterBedroom':([(567,506),(833,506),(833,790),(567,790)],'Oak'),
  'MasterBath':([(567,424),(833,424),(833,506),(567,506)],'Tile'),
  'GuestBedroomNW':([(568,43),(779,43),(779,323),(640,323),(640,307),(568,307)],'Oak'),
- 'StudyGames':([(367,43),(560,43),(560,318),(367,318)],'Oak'),
+ 'StudyGames':([(341,43),(560,43),(560,318),(341,318)],'Oak'),
  'CommonBath':([(640,325),(779,325),(779,424),(640,424)],'Tile'),
  'GuestBedroomSE':([(0,542),(202,542),(202,744),(0,744)],'Oak'),
  'Living':([(85,317),(567,317),(567,790),(202,790),(202,542),(85,542)],'Oak'),
- 'KitchenUtility':([(183,10),(367,10),(367,317),(162,317),(162,181),(183,181)],'Stone'),
+ 'KitchenUtility':([(183,10),(367,10),(367,42),(341,42),(341,317),(162,317),(162,181),(183,181)],'Stone'),
  'TerraceFloor':([(17,744),(202,744),(202,790),(586,790),(586,886),(584,899),(576,921),(563,937),(549,946),(534,950),(32,950),(17,944)],'Stone')}
 for n,(pts,mat) in rooms.items():poly('Floor_'+n,pts,-.015,.035,mat)
 outer=[[183,10,230,10],[335,10,367,10],[367,10,367,42],[367,42,390,42],[530,42,615,42],[745,42,779,42],[779,42,779,420],[779,420,833,420],[833,420,833,790],[833,790,800,790],[615,790,586,790],[0,744,0,542],[0,542,85,542],[85,542,85,317],[85,317,100,317],[153,317,162,317],[162,317,162,181],[162,181,183,181],[183,181,183,10]]
-inside=[[365,43,365,317],[560,43,560,70],[560,290,560,318],[568,318,578,318],[628,318,640,318],[635,323,635,345],[635,398,635,424],[635,325,779,325],[635,424,833,424],[567,424,567,506],[567,506,630,506],[685,506,833,506],[567,506,567,548],[567,609,567,790],[100,430,205,430],[100,430,100,538],[205,430,205,450],[205,500,205,538],[100,538,205,538],[202,542,202,744],[0,542,140,542],[194,542,202,542],[202,779,264,779],[492,779,567,779]]
+inside=[[341,43,341,317],[341,42,367,42],[560,43,560,70],[560,290,560,318],[568,318,578,318],[628,318,640,318],[635,323,635,345],[635,398,635,424],[635,325,779,325],[635,424,833,424],[567,424,567,506],[567,506,630,506],[685,506,833,506],[567,506,567,548],[567,609,567,790],[85,430,205,430],[205,430,205,450],[205,500,205,538],[85,538,205,538],[202,542,202,744],[0,542,140,542],[194,542,202,542],[202,779,264,779],[492,779,567,779]]
 for i,v in enumerate(outer+inside):segment('Wall_%03d'%i,v)
 # Verify important topology instead of guessing new openings.
-G['Architecture']['bearingWall']='Kitchen / study x=365, intact; north partition alteration unverified'
+G['Architecture']['bearingWall']='Kitchen / study x=341, intact; north partition alteration unverified'
 for name,v in [('Entry_NorthFacing',[100,317,153,317]),('GuestNW_South',[578,318,628,318]),('CommonBath_East',[635,345,635,398]),('MasterBath_South',[630,506,685,506]),('MasterBedroom_East',[567,548,567,609]),('Storage',[205,450,205,500]),('GuestSE_North',[140,542,194,542])]:door('Door_'+name,v)
 window('UtilityNorth',[230,10,335,10]);window('StudyNorth',[390,42,530,42]);window('GuestNWNorth',[615,42,745,42]);window('MasterSouth',[615,790,800,790],.12,2.3)
 window('GuestSESouth',[0,744,202,744],.12,2.3)
@@ -140,16 +144,16 @@ for obj in [o for o in bpy.data.objects if o.name.startswith('GuestSEBed')]:
  delta=obj.location-se_center;obj.location=se_center+Vector((delta.y,-delta.x,delta.z));obj.rotation_euler.z-=math.pi/2
 wardrobe('GuestSEWardrobe',70,566,1.20,.55)
 # Continuous wall-following desk, dual articulated monitor arms.
-c('DeskNorth',466,80,.73,2.77,.65,.065,'Walnut',.025);c('DeskReturn',388,150,.73,.58,1.68,.065,'Walnut',.025)
-for x in [394,536]:c('DeskDrawers',x,80,.03,.42,.55,.70,'Oak',.02)
+c('DeskNorth',450,80,.69,3.05,.65,.06,'Walnut',.025);c('DeskReturn',364,150,.69,.58,1.68,.06,'Walnut',.025)
+for x in [370,536]:c('DeskDrawers',x,80,.03,.42,.55,.65,'Oak',.02)
 for i,x in enumerate([435,493]):
- a,b=xy(x,80);rod('MonitorArm_%d_base'%i,(a,b+.17,.80),(a,b+.17,1.12),.025)
- rod('MonitorArm_%d_link'%i,(a,b+.17,1.12),(a+.15,b-.08,1.27),.025)
- rod('MonitorArm_%d_elbow'%i,(a+.15,b-.08,1.27),(a,b-.18,1.22),.025)
- cube('Monitor_%d'%i,a,b-.20,1.04,.74,.045,.43,'Metal',.018)
- cube('MonitorScreen_%d'%i,a,b-.227,1.065,.69,.007,.37,'Screen',.008)
-c('Keyboard',464,95,.80,.43,.15,.02,'Metal',.008);c('ComputerTower',386,178,.05,.24,.48,.5,'Metal',.03)
-c('NAS',388,125,.84,.22,.25,.25,'Metal',.02)
+ a,b=xy(x,80);rod('MonitorArm_%d_base'%i,(a,b+.17,.755),(a,b+.17,1.075),.025)
+ rod('MonitorArm_%d_link'%i,(a,b+.17,1.075),(a+.15,b-.08,1.225),.025)
+ rod('MonitorArm_%d_elbow'%i,(a+.15,b-.08,1.225),(a,b-.18,1.175),.025)
+ cube('Monitor_%d'%i,a,b-.20,.995,.74,.045,.43,'Metal',.018)
+ cube('MonitorScreen_%d'%i,a,b-.227,1.02,.69,.007,.37,'Screen',.008)
+c('Keyboard',464,95,.755,.43,.15,.02,'Metal',.008);c('ComputerTower',364,178,.05,.24,.48,.5,'Metal',.03)
+c('NAS',364,125,.79,.22,.25,.25,'Metal',.02)
 def chair(name,x,z,rot=0):
  a,b=xy(x,z);o=c(name+'_seat',x,z,.41,.45,.45,.07,'Cushion',.06);o.rotation_euler.z=rot
  for dx in [-.16,.16]:
@@ -165,19 +169,19 @@ for i in range(5):
  rod('WorkChairSpoke',(a,b,.18),p,.024)
  ellipsoid('WorkChairCaster',*p,.045,.035,.045,'Metal')
 # Potato-shaped lounge.
-sphere_at('PotatoSeat',531,199,.27,.40,.42,.14);sphere_at('PotatoBack',531,181,.46,.44,.18,.22)
+sphere_at('PotatoSeat',525,151,.27,.40,.42,.14);sphere_at('PotatoBack',525,133,.46,.44,.18,.22)
 for dx in [-.30,.30]:
- a,b=xy(531,199);ellipsoid('PotatoArm',a+dx,b,.42,.17,.38,.18)
+ a,b=xy(525,151);ellipsoid('PotatoArm',a+dx,b,.42,.17,.38,.18)
 # Real rectangular tabletop boardgame, map and separate decks (not mahjong).
 def table(name,x,z,w,d,height=.75):
- c(name+'_top',x,z,height,w,d,.075,'Walnut',.035);a,b=xy(x,z)
+ c(name+'_top',x,z,height-.045,w,d,.045,'Walnut',.035);a,b=xy(x,z)
  for dx in [-w*.42,w*.42]:
-  for dy in [-d*.36,d*.36]:cube(name+'_leg',a+dx,b+dy,.02,.06,.06,height-.02,'Walnut',.015)
-table('Boardgame',463,269,1.75,.90)
-c('BoardgameMap',463,269,.83,1.12,.70,.008,'Map')
+  for dy in [-d*.36,d*.36]:cube(name+'_leg',a+dx,b+dy,.02,.06,.06,height-.065,'Walnut',.015)
+table('Boardgame',463,269,1.80,.90)
+c('BoardgameMap',463,269,.756,1.12,.70,.008,'Map')
 for i in range(16):
- x=463+random.uniform(-31,31);z=269+random.uniform(-18,18);c('MapLand',x,z,.841,random.uniform(.05,.16),random.uniform(.05,.12),.006,'Cushion',.015)
-for i in range(8):c('CardDeck',463+(-48 if i<4 else 48),250+(i%4)*12,.84,.07,.10,.015,'White',.003)
+ x=463+random.uniform(-31,31);z=269+random.uniform(-18,18);c('MapLand',x,z,.766,random.uniform(.05,.16),random.uniform(.05,.12),.006,'Cushion',.015)
+for i in range(8):c('CardDeck',463+(-48 if i<4 else 48),250+(i%4)*12,.766,.07,.10,.015,'White',.003)
 for x in [425,502]:
  for z in [221,315]:chair('GameChair',x,z,math.pi if z==315 else 0)
 # Kitchen kept north; washer at south end next to foyer.
@@ -195,17 +199,34 @@ a,b=xy(207,282)
 ellipsoid('WasherBlackHatch',a-.307,b,.43,.017,.205,.205,'Metal');ellipsoid('WasherGlass',a-.326,b,.43,.009,.157,.157,'Screen')
 c('WasherCounter',207,282,.88,.65,.65,.045,'Stone',.012)
 c('Fridge',337,52,.02,.66,.70,1.9,'White',.025)
-# Bar around the intact wall end, not through masonry.
-c('HorizontalBreakfastBar',365,335,.89,2.05,.54,.07,'Walnut',.12);c('BarSupport',365,335,.03,.18,.42,.86,'Oak',.025)
-for x in [386,429]:
- c('BarStoolSeat',x,365,.65,.41,.41,.07,'Cushion',.06)
- a,b=xy(x,365)
- for dx in [-.14,.14]:
-  for dy in [-.14,.14]:rod('BarStoolLeg',(a+dx,b+dy,.02),(a+dx,b+dy,.66),.023,'Walnut')
- rod('BarStoolFootrest',(a-.15,b,.27),(a+.15,b,.27),.016,'Metal')
-# Dining island and seats.
-c('DiningIslandBase',401,445,.03,1.8,.76,.69,'Walnut',.04);c('DiningIslandStone',401,445,.72,2.05,1.0,.075,'Stone',.06)
-for x in [360,405,450]:chair('DiningChair',x,393)
+# A slim round-ended coffee bar touches the south end of the intact bearing wall.
+# It has no stools in the dining-chair circulation zone.
+def rounded_slab(name,x,z,w,d,base,h,mat,r=.18):
+ a,b=xy(x,z);r=min(r,w/2,d/2);pts=[]
+ for cx,cy,start in [(a+w/2-r,b+d/2-r,0),(a-w/2+r,b+d/2-r,90),(a-w/2+r,b-d/2+r,180),(a+w/2-r,b-d/2+r,270)]:
+  for j in range(9):
+   angle=math.radians(start+j*90/8);pts.append((cx+r*math.cos(angle),cy+r*math.sin(angle)))
+ n=len(pts);verts=[(px,py,base) for px,py in pts]+[(px,py,base+h) for px,py in pts]
+ faces=[tuple(range(n-1,-1,-1)),tuple(range(n,n*2))]+[(i,(i+1)%n,(i+1)%n+n,i+n) for i in range(n)]
+ mesh=bpy.data.meshes.new(name);mesh.from_pydata(verts,[],faces);mesh.update();o=bpy.data.objects.new(name,mesh);bpy.context.collection.objects.link(o);attach(o,name,mat)
+ return o
+rounded_slab('CoffeeBarStone',341,333.25,1.50,.50,.865,.035,'Stone',.20)
+c('CoffeeBarOakEnd',383,333.25,.03,.035,.39,.835,'Oak',.01)
+a,b=xy(299,333.25);rod('CoffeeBarSlimSupport',(a,b,.03),(a,b,.865),.022,'Metal')
+# A compact coffee station makes this a useful transition counter.
+c('CoffeeMachine',310,333,.90,.20,.25,.27,'Metal',.025)
+c('CoffeeMachineFront',310,341,1.00,.15,.015,.13,'Walnut',.01)
+c('CoffeeDripTray',310,345,.905,.18,.11,.016,'Metal',.005)
+for xx in [355,370]:
+ a,b=xy(xx,334);bpy.ops.mesh.primitive_cylinder_add(vertices=24,radius=.038,depth=.075,location=(a,b,.95));attach(bpy.context.object,'CoffeeCup','White')
+ bpy.ops.mesh.primitive_cylinder_add(vertices=24,radius=.032,depth=.004,location=(a,b,.989));attach(bpy.context.object,'CoffeeSurface','Soil')
+ bpy.ops.mesh.primitive_torus_add(major_segments=20,minor_segments=8,major_radius=.026,minor_radius=.006,location=(a+.04,b,.952),rotation=(math.pi/2,0,0));attach(bpy.context.object,'CoffeeCupHandle','White')
+
+# Dining island-table: compact storage at one end and open knee space at the other.
+c('DiningIslandBase',434,480,.03,.95,.58,.68,'Oak',.035)
+rounded_slab('DiningIslandStone',401,480,2.0,.90,.71,.04,'Stone',.16)
+a,b=xy(350,480);rod('DiningIslandLeg',(a,b,.03),(a,b,.71),.032,'Walnut')
+for x in [360,405,450]:chair('DiningChair',x,428)
 # Very soft L sofa: west back, seating east, chaise toward south.
 c('LivingRug',395,657,.025,3.9,3.0,.016,'Rug',.12)
 a,b=xy(477,655)
@@ -269,12 +290,13 @@ table('TerraceSideTable',345,847,.46,.46,.43)
 scene=bpy.context.scene;scene.unit_settings.system='METRIC';scene.unit_settings.scale_length=1
 scene['status']='CONCEPT - no measured internal dimensions; nominal furniture sizes, uncertain walls/clearances not approved'
 scene['orientation']='North +Y. Entry on right foyer north horizontal edge. Master SW, kitchen NE.'
+scene['model_revision']='2026-11-08-proportion-and-coffee-bar'
 scene['room_count']='Four original rooms, one used as open study; TWO bathrooms'
 scene.world.use_nodes=True;scene.world.node_tree.nodes['Background'].inputs[0].default_value=(.75,.79,.82,1);scene.world.node_tree.nodes['Background'].inputs[1].default_value=.65
 for loc,power,size in [((1,-4,14),2200,10),((-7,6,12),1700,8)]:
  bpy.ops.object.light_add(type='AREA',location=loc);light=bpy.context.object;light.data.energy=power;light.data.shape='DISK';light.data.size=size
  light.rotation_euler=(Vector((0,0,0))-light.location).to_track_quat('-Z','Y').to_euler()
-bpy.ops.object.camera_add(location=(12,-17,23));cam=bpy.context.object;cam.name='Camera_WholeHome';cam.rotation_euler=(Vector((0,0,0))-cam.location).to_track_quat('-Z','Y').to_euler();cam.data.type='ORTHO';cam.data.ortho_scale=20.8;scene.camera=cam
+bpy.ops.object.camera_add(location=(7,-18,26));cam=bpy.context.object;cam.name='Camera_WholeHome';cam.rotation_euler=(Vector((0,0,0))-cam.location).to_track_quat('-Z','Y').to_euler();cam.data.type='ORTHO';cam.data.ortho_scale=21.8;scene.camera=cam
 for area in (bpy.context.screen.areas if bpy.context.screen else []):
  if area.type=='VIEW_3D':
   area.spaces.active.shading.type='MATERIAL';area.spaces.active.region_3d.view_distance=23
@@ -291,9 +313,9 @@ bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'home-21101.blend'))
 import logging
 logging.getLogger('io_scene_gltf2').setLevel(logging.ERROR)
 bpy.ops.export_scene.gltf(filepath=str(OUT/'home-21101-raw.glb'),export_format='GLB',export_extras=True,export_cameras=False,export_lights=False,use_visible=False,export_apply=True)
-dimensions={'units':'m','surveyed':False,'masterMattress':[1.8,2.0,.20],'guestMattress':[1.5,2.0,.20],'wardrobeDepth':.56,'wardrobeHeight':2.35,'deskHeight':.795,'deskDepth':.65,'diningIsland':[2.05,1.0,.795],'boardgameTable':[1.75,.90,.825],'sofaSeatHeight':.44,'sofaBackHeight':.92,'barHeight':.96,'barSeatHeight':.72,'doorHeight':2.12,'wallHeight':H}
+dimensions={'units':'m','surveyed':False,'masterMattress':[1.8,2.0,.20],'guestMattress':[1.5,2.0,.20],'wardrobeDepth':.56,'wardrobeHeight':2.35,'deskHeight':.75,'deskDepth':.65,'diningIsland':[2.0,.90,.75],'boardgameTable':[1.80,.90,.75],'sofaSeatHeight':.44,'sofaBackHeight':.92,'coffeeBar':[1.50,.50,.90],'coffeeBarStools':0,'doorHeight':2.12,'wallHeight':H}
 (OUT/'nominal-dimensions.json').write_text(json.dumps(dimensions,indent=2),encoding='utf-8')
-manifest={'status':scene['status'],'nominalCoordinateScale':S,'notSurveyed':True,'wallHeight':H,'objects':len(bpy.data.objects),'meshes':len([o for o in bpy.data.objects if o.type=='MESH']),'bathrooms':2,'variants':['PartitionClosed','PartitionFolded'],'source':'Blender 4.5 authoring script'}
+manifest={'status':scene['status'],'nominalCoordinateScale':S,'notSurveyed':True,'wallHeight':H,'objects':len(bpy.data.objects),'meshes':len([o for o in bpy.data.objects if o.type=='MESH']),'bathrooms':2,'variants':['PartitionClosed','PartitionFolded'],'source':'Blender 4.5 authoring script','revision':scene['model_revision'],'terraceReferenceArea':30.36}
 (OUT/'model-info.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
 # Render a genuine Blender preview with a low-wall cutaway; native file retains full-height walls.
 for o in G['Architecture'].children:
@@ -302,7 +324,7 @@ for o in G['Doors'].children:o.scale.z=.34;o.location.z*=.34
 for o in G['Glazing'].children:o.scale.z=.34;o.location.z*=.34
 for o in G['PartitionClosed'].children:o.scale.z=.34;o.location.z*=.34
 scene.render.engine='CYCLES';scene.cycles.samples=24;scene.cycles.use_denoising=True
-scene.render.resolution_x=1500;scene.render.resolution_y=1400;scene.render.resolution_percentage=100
+scene.render.resolution_x=1500;scene.render.resolution_y=1500;scene.render.resolution_percentage=100
 scene.render.image_settings.file_format='PNG';scene.render.filepath=str(OUT/'blender-preview.png')
 scene.view_settings.view_transform='AgX';scene.render.film_transparent=False
 bpy.ops.render.render(write_still=True)

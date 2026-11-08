@@ -10,5 +10,7 @@
     "PartitionClosed",
     "PartitionFolded"
   ],
-  "source": "Blender 4.5 authoring script"
+  "source": "Blender 4.5 authoring script",
+  "revision": "2026-11-08-proportion-and-coffee-bar",
+  "terraceReferenceArea": 30.36
 }

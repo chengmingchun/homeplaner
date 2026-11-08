@@ -19,6 +19,24 @@
     0.62,
     0.84
   ],
+  "CoffeeBarStone": [
+    1.5,
+    0.5,
+    0.035
+  ],
+  "DiningIslandStone": [
+    2.0,
+    0.9,
+    0.04
+  ],
+  "nominalBarToChairBackGapM": 0.967,
   "bathrooms": 2,
-  "fullWallHeight": 2.8
+  "duplicateStorageWall": false,
+  "barStools": 0,
+  "conceptFloorPatchM2": {
+    "StudyGames": 14.33,
+    "KitchenUtility": 12.42,
+    "TerraceFloor": 30.37
+  },
+  "notSurveyed": true
 }
