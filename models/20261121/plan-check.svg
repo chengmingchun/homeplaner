@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-1.05 -3.15 16.5 21" role="img" aria-labelledby="title">
+<title id="title">按新图建立的户型核对图</title>
+<style>
+text{font-family:"Microsoft YaHei","PingFang SC",sans-serif;fill:#263b33}
+.label{font-size:.28px;text-anchor:middle}
+.minor{fill:#627870;font-size:.25px}
+</style>
+<rect x="-1.05" y="-3.15" width="16.5" height="21" fill="#f8f7f2"/>
+<text x="0" y="-2.43" font-size=".51" font-weight="700">2-21101 · 户型核对图</text>
+<text x="0" y="-1.93" class="minor">2026-11-21 · 照片校正 · 除标注总尺寸外均为描摹估算</text>
+<text x="12.85" y="-2.40" font-size=".38" text-anchor="end">北 ↑</text>
+<polygon points="6.75,0 9.36,0 9.36,4.7 10.88,4.7 10.88,8.2 12.85,8.2 12.85,11.79 12.85,15.68 4.48,15.68 4.22,15.61 4.01,15.49 3.84,15.3 3.79,15.06 3.79,12.65 0,12.65 0,6.3 0.73,6.3 0.73,1.29 6.75,1.29" fill="#e7e2d6"/>
+<polygon points="3.91,12.53 9.8,12.53 9.8,11.79 12.73,11.79 12.85,15.68 4.48,15.68 4.22,15.61 4.01,15.49 3.84,15.3 3.79,15.06 3.79,12.65" fill="#e0e8dc"/>
+<polygon points="0.12,6.42 3.91,6.42 3.91,8.16 0.12,8.16" fill="#dfe7e8"/>
+<polygon points="0.85,4.71 2.76,4.71 2.76,6.42 0.85,6.42" fill="#dfe7e8"/>
+<polygon points="9.4,6.56 10.76,6.56 10.76,8.32 9.4,8.32" fill="#dfe7e8"/>
+<polygon points="0.85,1.41 0.85,0.69 6.2,0.69 6.2,-0.68 9.25,-0.68 9.25,0.115 6.86,0.115 6.86,1.41" fill="#e6d6aa" fill-opacity=".48" stroke="#a28b54" stroke-width=".025"/>
+<polygon points="0.02,12.53 3.79,12.53 3.79,13.3 0.02,13.3" fill="#e6d6aa" fill-opacity=".48" stroke="#a28b54" stroke-width=".025"/>
+<polyline points="0.85,1.41 0.85,-1.63 9.25,-1.63" fill="none" stroke="#7b837e" stroke-width=".04" stroke-dasharray=".25 .13"/>
+<polyline points="0.02,15.77 3.38,15.77 3.79,15.56" fill="none" stroke="#7b837e" stroke-width=".04" stroke-dasharray=".25 .13"/>
+<polyline points="12.75,11.79 12.75,15.58 4.49,15.58 4.24,15.51 4.07,15.4 3.95,15.26 3.89,15.04 3.89,12.59" fill="none" stroke="#55745d" stroke-width=".065"/>
+<line x1="6.86" y1="0.115" x2="9.25" y2="0.115" stroke="#364842" stroke-width="0.23" stroke-linecap="square"/>
+<line x1="9.25" y1="0.115" x2="9.25" y2="4.71" stroke="#364842" stroke-width="0.22" stroke-linecap="square"/>
+<line x1="9.25" y1="0.115" x2="9.25" y2="-1.63" stroke="#858f86" stroke-width="0.22" stroke-linecap="square"/>
+<line x1="6.86" y1="0.115" x2="6.86" y2="4.71" stroke="#364842" stroke-width="0.22" stroke-linecap="square"/>
+<line x1="8.58" y1="4.71" x2="9.25" y2="4.71" stroke="#364842" stroke-width="0.2" stroke-linecap="square"/>
+<line x1="6.32" y1="1.41" x2="6.86" y2="1.41" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="3.32" y1="1.41" x2="4.53" y2="1.41" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="0.85" y1="1.41" x2="1.83" y2="1.41" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="0.85" y1="1.41" x2="0.85" y2="2.48" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="0.85" y1="3.7" x2="0.85" y2="4.71" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="3.91" y1="1.41" x2="3.91" y2="4.71" stroke="#364842" stroke-width="0.21" stroke-linecap="square"/>
+<line x1="0.85" y1="4.71" x2="2.82" y2="4.71" stroke="#364842" stroke-width="0.21" stroke-linecap="square"/>
+<line x1="0.85" y1="4.71" x2="0.85" y2="5.16" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="0.85" y1="5.94" x2="0.85" y2="6.42" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="2.76" y1="5.65" x2="2.76" y2="6.42" stroke="#364842" stroke-width="0.15" stroke-linecap="square"/>
+<line x1="0.85" y1="6.42" x2="3.91" y2="6.42" stroke="#364842" stroke-width="0.22" stroke-linecap="square"/>
+<line x1="0.12" y1="6.42" x2="0.27" y2="6.42" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="0.12" y1="6.42" x2="0.12" y2="5.15" stroke="#858f86" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="0.12" y1="6.42" x2="0.12" y2="12.53" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="3.91" y1="5.77" x2="3.91" y2="8.16" stroke="#364842" stroke-width="0.22" stroke-linecap="square"/>
+<line x1="0.12" y1="8.16" x2="1.62" y2="8.16" stroke="#364842" stroke-width="0.16" stroke-linecap="square"/>
+<line x1="2.42" y1="8.16" x2="3.91" y2="8.16" stroke="#364842" stroke-width="0.16" stroke-linecap="square"/>
+<line x1="3.91" y1="9.26" x2="3.91" y2="12.53" stroke="#364842" stroke-width="0.22" stroke-linecap="square"/>
+<line x1="0.12" y1="12.53" x2="0.81" y2="12.53" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="3.21" y1="12.53" x2="4.77" y2="12.53" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="10.44" y1="4.71" x2="10.76" y2="4.71" stroke="#364842" stroke-width="0.22" stroke-linecap="square"/>
+<line x1="10.76" y1="4.71" x2="10.76" y2="8.32" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="9.4" y1="6.56" x2="10.76" y2="6.56" stroke="#364842" stroke-width="0.16" stroke-linecap="square"/>
+<line x1="9.4" y1="6.1" x2="9.4" y2="7.09" stroke="#364842" stroke-width="0.15" stroke-linecap="square"/>
+<line x1="9.4" y1="7.86" x2="9.4" y2="8.32" stroke="#364842" stroke-width="0.15" stroke-linecap="square"/>
+<line x1="9.4" y1="8.32" x2="10.76" y2="8.32" stroke="#364842" stroke-width="0.2" stroke-linecap="square"/>
+<line x1="10.76" y1="8.32" x2="12.73" y2="8.32" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="9.8" y1="8.32" x2="9.8" y2="8.49" stroke="#364842" stroke-width="0.21" stroke-linecap="square"/>
+<line x1="9.8" y1="9.37" x2="9.8" y2="12.53" stroke="#364842" stroke-width="0.23" stroke-linecap="square"/>
+<line x1="12.73" y1="8.32" x2="12.73" y2="11.79" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="9.8" y1="11.79" x2="10.41" y2="11.79" stroke="#364842" stroke-width="0.22" stroke-linecap="square"/>
+<line x1="12.18" y1="11.79" x2="12.73" y2="11.79" stroke="#364842" stroke-width="0.22" stroke-linecap="square"/>
+<line x1="9.23" y1="12.53" x2="9.8" y2="12.53" stroke="#364842" stroke-width="0.24" stroke-linecap="square"/>
+<line x1="1.83" y1="1.41" x2="3.32" y2="1.41" stroke="#5b8490" stroke-width=".10"/>
+<line x1="4.53" y1="1.41" x2="6.32" y2="1.41" stroke="#5b8490" stroke-width=".10"/>
+<line x1="0.85" y1="2.48" x2="0.85" y2="3.7" stroke="#5b8490" stroke-width=".10"/>
+<line x1="0.85" y1="5.16" x2="0.85" y2="5.94" stroke="#5b8490" stroke-width=".10"/>
+<line x1="0.27" y1="6.42" x2="0.85" y2="6.42" stroke="#5b8490" stroke-width=".10"/>
+<line x1="0.81" y1="12.53" x2="3.21" y2="12.53" stroke="#5b8490" stroke-width=".10"/>
+<line x1="4.77" y1="12.53" x2="9.23" y2="12.53" stroke="#5b8490" stroke-width=".10"/>
+<line x1="10.41" y1="11.79" x2="12.18" y2="11.79" stroke="#5b8490" stroke-width=".10"/>
+<line x1="9.25" y1="4.71" x2="10.44" y2="4.71" stroke="#a4683d" stroke-width=".064" stroke-dasharray=".13 .07"/>
+<line x1="2.82" y1="4.71" x2="3.91" y2="4.71" stroke="#a4683d" stroke-width=".064" stroke-dasharray=".13 .07"/>
+<line x1="2.76" y1="4.71" x2="2.76" y2="5.65" stroke="#a4683d" stroke-width=".064" stroke-dasharray=".13 .07"/>
+<line x1="1.62" y1="8.16" x2="2.42" y2="8.16" stroke="#a4683d" stroke-width=".064" stroke-dasharray=".13 .07"/>
+<line x1="3.91" y1="8.16" x2="3.91" y2="9.26" stroke="#a4683d" stroke-width=".064" stroke-dasharray=".13 .07"/>
+<line x1="9.4" y1="7.09" x2="9.4" y2="7.86" stroke="#a4683d" stroke-width=".064" stroke-dasharray=".13 .07"/>
+<line x1="9.8" y1="8.49" x2="9.8" y2="9.37" stroke="#a4683d" stroke-width=".064" stroke-dasharray=".13 .07"/>
+<text x="2.38" y="2.92" class="label">次卧1</text>
+<text x="5.38" y="2.92" class="label">书房</text>
+<text x="8.05" y="2.82" class="label">厨房</text>
+<text x="1.81" y="5.7" class="label">客卫</text>
+<text x="2.02" y="7.45" class="label">主卫</text>
+<text x="9.77" y="5.55" class="label">玄关</text>
+<text x="10.08" y="7.5" class="label">家政间</text>
+<text x="2.02" y="10.6" class="label">主卧</text>
+<text x="6.55" y="9.03" class="label">客餐厅</text>
+<text x="11.23" y="10.14" class="label">次卧3</text>
+<text x="8.08" y="14.42" class="label">南向露台</text>
+<line x1="0" y1="16.41" x2="12.85" y2="16.41" stroke="#61756e" stroke-width=".025"/>
+<line x1="0" y1="16.1" x2="0" y2="16.58" stroke="#61756e" stroke-width=".025"/>
+<line x1="12.85" y1="16.1" x2="12.85" y2="16.58" stroke="#61756e" stroke-width=".025"/>
+<line x1="13.68" y1="0" x2="13.68" y2="12.65" stroke="#61756e" stroke-width=".025"/>
+<line x1="13.43" y1="0" x2="13.95" y2="0" stroke="#61756e" stroke-width=".025"/>
+<line x1="13.43" y1="12.65" x2="13.95" y2="12.65" stroke="#61756e" stroke-width=".025"/>
+<text x="6.425" y="16.85" class="label">12.85 米</text>
+<text x="14.06" y="6.33" class="label" transform="rotate(90 14.06 6.33)">12.65 米 · 厨房北边至厅南边</text>
+<text x="0" y="17.50" class="minor">橙虚线＝门洞　蓝线＝窗或玻璃门　灰虚线＝上层投影　浅黄＝结构挑板</text></svg>

@@ -1,0 +1,27 @@
+{
+  "revision": "2026-11-21-plan-photo",
+  "dimensionReferencesM": {
+    "overallWidth": 12.85,
+    "kitchenNorthToLivingSouth": 12.65
+  },
+  "notSurveyed": true,
+  "wallHeightAssumptionM": 2.8,
+  "bathrooms": 2,
+  "bedroomsAndStudy": 4,
+  "doors": [
+    "Entry_NorthFacing",
+    "GuestNW_South",
+    "CommonBath_East",
+    "MasterBath_South",
+    "MasterBedroom_East",
+    "Housekeeping_West",
+    "GuestSE_West"
+  ],
+  "northPartition": "intact; future moveable partition is separate from the traced plan",
+  "terraceRail": "open railing, southwest rounded edge",
+  "barWrap": "furniture notch wraps intact kitchen wall",
+  "renderFiles": [
+    "blender-preview.png",
+    "top-plan.png"
+  ]
+}
