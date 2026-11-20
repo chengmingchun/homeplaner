@@ -15,6 +15,8 @@ const sun=new THREE.DirectionalLight('#fffdf5',2.0);sun.position.set(6,15,8);sun
 const fill=new THREE.DirectionalLight('#edf3ff',.55);fill.position.set(-7,9,-6);scene.add(fill);
 const ground=new THREE.Mesh(new THREE.PlaneGeometry(45,45),new THREE.ShadowMaterial({opacity:.13}));ground.rotation.x=-Math.PI/2;ground.position.y=-.205;ground.receiveShadow=true;scene.add(ground);
 let cut=false;const vertical=[];
+const wallAttachments=new Set(['Doors','Glazing','Proposed_fixed_glass','KitchenDoorParked',
+ 'KitchenDoorClosed','StudyDoorParked','StudyDoorClosed']);
 const scheme=new URLSearchParams(location.search).get('scheme');
 const cabinetScheme=scheme==='wall-cabinet';
 const islandScheme=scheme==='island-layout';
@@ -75,7 +77,7 @@ const modelPath=modelPaths[scheme]||'./models/20261121/home-21101.glb';
 new GLTFLoader().load(modelPath,gltf=>{
  const model=gltf.scene;scene.add(model);
  model.traverse(o=>{if(o.isMesh){o.castShadow=!o.material.transparent;o.receiveShadow=true;}
-  if(o.userData.wall||['Doors','Glazing','Proposed door leaves','Proposed fixed glass','KitchenDoorParked','KitchenDoorClosed','StudyDoorParked','StudyDoorClosed'].includes(o.parent?.name))vertical.push({obj:o,scale:o.scale.clone(),position:o.position.clone()});
+  if(o.userData.wall||wallAttachments.has(o.parent?.name))vertical.push({obj:o,scale:o.scale.clone(),position:o.position.clone()});
  });
  if(islandScheme){
   for(const [id,prefix,label] of [['kitchen-door','Kitchen','厨房门'],['study-door','Study','电竞间门']]){
