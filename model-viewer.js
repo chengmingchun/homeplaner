@@ -18,14 +18,17 @@ let cut=false;const vertical=[];
 const scheme=new URLSearchParams(location.search).get('scheme');
 const cabinetScheme=scheme==='wall-cabinet';
 const islandScheme=scheme==='island-layout';
-let kitchenDoor;
 if(cabinetScheme||islandScheme){
- $('page-title').textContent=islandScheme?'岛台与海盐柜体':'承重墙包柜方案';
+ $('page-title').textContent=islandScheme?'意式岛台与双推拉门':'承重墙包柜方案';
  $('layout-link').href='./';
  $('layout-link').textContent='原户型';
  $('scheme-link').hidden=true;
  $(islandScheme?'island-description':'scheme-description').hidden=false;
  $('plan-description').hidden=true;
+ if(islandScheme){
+  $('view').querySelector('[value="kitchen"]').textContent='L 型厨房';
+  $('view').querySelector('[value="utility"]').textContent='家政间与洗衣区';
+ }
  $('view').insertAdjacentHTML('beforeend',islandScheme
   ? '<option value="island">岛台与双门</option><option value="office">电竞间</option><option value="master">主卧</option>'
   : '<option value="cabinet">包柜整体</option><option value="cabinetStudy">电竞收纳侧</option><option value="cabinetKitchen">厨房备餐侧</option>');
@@ -65,22 +68,30 @@ function focus(view){
 }
 function setCut(){renderer.shadowMap.needsUpdate=true;for(const item of vertical){item.obj.scale.copy(item.scale);item.obj.position.copy(item.position);if(cut){item.obj.scale.y*=.34;item.obj.position.y*=.34;}}$('walls').textContent=cut?'恢复完整墙高':'低墙看布置';$('walls').classList.toggle('active',cut);$('walls').setAttribute('aria-pressed',String(cut));}
 const modelPaths={
- 'island-layout':'./models/island-layout/island-layout.glb',
+ 'island-layout':'./models/island-layout/island-layout.glb?v=italian-2',
  'wall-cabinet':'./models/wall-cabinet/wall-cabinet.glb'
 };
 const modelPath=modelPaths[scheme]||'./models/20261121/home-21101.glb';
 new GLTFLoader().load(modelPath,gltf=>{
  const model=gltf.scene;scene.add(model);
  model.traverse(o=>{if(o.isMesh){o.castShadow=!o.material.transparent;o.receiveShadow=true;}
-  if(o.userData.wall||['Doors','Glazing','Proposed door leaves','Proposed fixed glass','KitchenDoorParked','KitchenDoorClosed'].includes(o.parent?.name))vertical.push({obj:o,scale:o.scale.clone(),position:o.position.clone()});
+  if(o.userData.wall||['Doors','Glazing','Proposed door leaves','Proposed fixed glass','KitchenDoorParked','KitchenDoorClosed','StudyDoorParked','StudyDoorClosed'].includes(o.parent?.name))vertical.push({obj:o,scale:o.scale.clone(),position:o.position.clone()});
  });
  if(islandScheme){
-  const parked=model.getObjectByName('KitchenDoorParked');
-  const closed=model.getObjectByName('KitchenDoorClosed');
-  if(parked&&closed){
+  for(const [id,prefix,label] of [['kitchen-door','Kitchen','厨房门'],['study-door','Study','电竞间门']]){
+   const parked=model.getObjectByName(prefix+'DoorParked');
+   const closed=model.getObjectByName(prefix+'DoorClosed');
+   if(!parked||!closed)continue;
+   const button=$(id);
    closed.visible=false;
-   kitchenDoor={parked,closed,isClosed:false};
-   $('kitchen-door').hidden=false;
+   button.hidden=false;
+   button.onclick=()=>{
+    closed.visible=!closed.visible;
+    parked.visible=!closed.visible;
+    button.textContent=(closed.visible?'打开':'关闭')+label;
+    button.setAttribute('aria-pressed',String(closed.visible));
+    renderer.shadowMap.needsUpdate=true;
+   };
   }
  }
  if(cabinetScheme||islandScheme){
@@ -91,15 +102,6 @@ new GLTFLoader().load(modelPath,gltf=>{
  setCut();
  $('loading').classList.add('hidden');
 },e=>{if(e.total)$('progress').textContent=`已载入 ${Math.min(100,Math.round(e.loaded/e.total*100))}%`;},e=>{console.error('MODEL_LOAD_FAILED',e);$('loadtitle').textContent='模型暂时没有载入成功';$('progress').classList.add('error');$('progress').textContent='请刷新页面重试。';});
-$('kitchen-door').onclick=()=>{
- if(!kitchenDoor)return;
- kitchenDoor.isClosed=!kitchenDoor.isClosed;
- kitchenDoor.closed.visible=kitchenDoor.isClosed;
- kitchenDoor.parked.visible=!kitchenDoor.isClosed;
- $('kitchen-door').textContent=kitchenDoor.isClosed?'打开厨房门':'关闭厨房门';
- $('kitchen-door').setAttribute('aria-pressed',String(kitchenDoor.isClosed));
- renderer.shadowMap.needsUpdate=true;
-};
 $('walls').onclick=()=>{cut=!cut;setCut();};$('view').onchange=e=>focus(e.target.value);$('reset').onclick=()=>{$('view').value='home';home();};
 $('plus').onclick=()=>{camera.zoom=Math.min(6,camera.zoom*1.18);camera.updateProjectionMatrix();controls.update();};$('minus').onclick=()=>{camera.zoom=Math.max(.25,camera.zoom/1.18);camera.updateProjectionMatrix();controls.update();};
 $('info').onclick=()=>{const show=$('notes').hidden;$('notes').hidden=!show;$('info').setAttribute('aria-expanded',String(show));};
