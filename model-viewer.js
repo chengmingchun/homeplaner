@@ -28,6 +28,8 @@ const focusAreas={
  bar:[6.86,4.71,-3,3.8,5,4.8,.95],
  bath:[2.02,7.30,3,6,4,5],
  utility:[10.05,7.48,-3,5,4,5],
+ media:[9.25,10.15,-6,4,2.8,6.9,1.05],
+ laundry:[4.08,7.30,6,4,.65,5.8,1.10],
  island:[6.60,6.25,-3.6,8.5,9.6,8.4,.62],
  office:[5.46,3.08,3.8,7.1,6.4,4.5,.72],
  master:[2.10,10.30,3.1,7,5.5,5.8,.62]
@@ -48,7 +50,7 @@ function focus(view){
  camera.lookAt(controls.target);controls.update();
 }
 function setCut(){renderer.shadowMap.needsUpdate=true;for(const item of vertical){item.obj.scale.copy(item.scale);item.obj.position.copy(item.position);if(cut){item.obj.scale.y*=.34;item.obj.position.y*=.34;}}$('walls').textContent=cut?'恢复完整墙高':'低墙看布置';$('walls').classList.toggle('active',cut);$('walls').setAttribute('aria-pressed',String(cut));}
-const modelPath='./models/island-layout/island-layout.glb?v=italian-2';
+const modelPath='./models/island-layout/island-layout.glb?v=warm-italian-1';
 new GLTFLoader().load(modelPath,gltf=>{
  const model=gltf.scene;scene.add(model);
  model.traverse(o=>{if(o.isMesh){o.castShadow=!o.material.transparent;o.receiveShadow=true;}
@@ -69,7 +71,6 @@ new GLTFLoader().load(modelPath,gltf=>{
    renderer.shadowMap.needsUpdate=true;
   };
  }
- cut=true;
  setCut();
  $('loading').classList.add('hidden');
 },e=>{if(e.total)$('progress').textContent=`已载入 ${Math.min(100,Math.round(e.loaded/e.total*100))}%`;},e=>{console.error('MODEL_LOAD_FAILED',e);$('loadtitle').textContent='模型暂时没有载入成功';$('progress').classList.add('error');$('progress').textContent='请刷新页面重试。';});

@@ -136,15 +136,15 @@ def assign(obj,mat):
         obj.data.materials.append(mat)
 
 
-ivory=material('Warm taupe lacquer','A99883',.39)
-bone=material('Warm limestone','D1BBA0',.32)
-blue=material('Tobacco brown leather','80563B',.44)
-slate=material('Olive-grey textile','6C6659',.84)
+ivory=material('Warm putty lacquer','C2B5A4',.39)
+bone=material('Warm limestone','DAD0C1',.32)
+blue=material('Muted clay upholstery','A08069',.44)
+slate=material('Soft olive linen','959185',.84)
 silver=material('Burnished bronze','6B5140',.31)
 dark=material('Dark bronze profiles','48362C',.38)
-walnut=material('Smoked walnut','654531',.44)
+walnut=material('Natural walnut','816349',.44)
 fabric=material('Warm linen upholstery','E0D3C1',.83)
-tile=material('Polished warm greige porcelain','CDBFAF',.17)
+tile=material('Polished warm greige porcelain','D7CEC2',.17)
 grout=material('Warm grey joints','AAA08E',.57)
 plaster=bpy.data.materials['Plaster']
 light=material('Cream LED diffuser','F8EEE1',.40,2)
@@ -166,7 +166,8 @@ prefixes=('Boardgame','MapLand','CardDeck','GameChair','DeskNorth','DeskDrawers'
           'Fridge','WasherCounter','StorageCabinet','Kitchen pantry','Kitchen prep',
           'Kitchen stone splashback','Kitchen drawer','Kitchen upper','Kitchen overhead',
           'Kitchen undercabinet','Kitchen cutting','Kitchen dry-goods','Kitchen jar',
-          'Coffee end display','Coffee end shelf')
+          'Coffee end display','Coffee end shelf','TVConsole','TVBlackFrame','TVDisplay',
+          'Door_GuestSE_West','WasherBody','WasherGlass','WasherBlackHatch')
 for obj in list(bpy.data.objects):
     if obj.name.startswith(prefixes) and not obj.get('wall'):
         bpy.data.objects.remove(obj,do_unlink=True)
@@ -262,19 +263,115 @@ box('North integrated dishwasher control',(7.045,7.605,.836,.841,.793,.827),ivor
 box('Walnut cutting block',(8.61,8.943,1.21,1.625,.913,.929),ivory,.012)
 box('Dark serving bowl base',(7.02,7.265,.365,.600,.915,.960),walnut,.022)
 
-# Laundry is rotated toward the center of the housekeeper room.
-washer_old = point(8.77,3.83,0)
-washer_new = point(10.19,7.015,0)
-washer_rotation = Matrix.Rotation(math.pi/2,4,'Z')
-washer_motion = Matrix.Translation(washer_new) @ washer_rotation @ Matrix.Translation(-washer_old)
+# Add the shallow third face of the wall-end cabinetry, keeping the L as the main work zone.
+pale_oak=bpy.data.materials['Wrap | pale oak']
+box('Bearing wall shallow kitchen carcass',(6.996,7.299,1.16,4.407,.087,.874),pale_oak)
+box('Bearing wall shallow kitchen counter',(6.992,7.329,1.145,4.42,.875,.912),bone,.008)
+box('Bearing wall kitchen recessed plinth',(7.002,7.255,1.17,4.392,.021,.087),dark)
+for i in range(5):
+    y=1.167+i*.648
+    box('Bearing wall kitchen oak door',(7.298,7.318,y,y+.632,.09,.845),pale_oak,.004)
+    box('Bearing wall kitchen shadow pull',(7.317,7.324,y+.026,y+.603,.818,.839),silver,.002)
+box('Shallow cabinet link to coffee return',(6.993,7.328,4.420,4.495,.875,.912),bone,.005)
+
+# Recess the bathroom east-side partition only inside the existing bath.
+bath_old_x,bath_new_x=3.91,3.245
+bath_east=bpy.data.objects['Wall_MasterBathEast']
+assert not bath_east.get('bearing')
+bpy.data.objects.remove(bath_east,do_unlink=True)
+wall_box('Master bath original corridor return',(3.80,4.02,5.77,6.42,0,2.8))
+wall_box('Master bath proposed recess partition',(3.18,3.31,6.42,8.16,0,2.8))['structureUnconfirmed']=True
+bath_floor=bpy.data.objects['Floor_MasterBath']
+for vertex in bath_floor.data.vertices:
+    if abs(vertex.co.x-(bath_old_x-6.425))<.00001:
+        vertex.co.x=bath_new_x-6.425
+slab('Dining joinery niche finished floor',[(3.245,6.42),(3.91,6.42),(3.91,8.16),(3.245,8.16)],
+     -.018,.036,tile)
+
 for obj in bpy.data.objects:
-    if obj.name.startswith(('WasherBody','WasherBlackHatch','WasherGlass')):
-        obj.matrix_world = washer_motion @ obj.matrix_world
-        obj.name = obj.name.replace('SouthKitchen','Housekeeping')
-box('Laundry washer top',(9.842,10.54,6.672,7.357,.862,.895),bone,.007)
-box('Laundry storage overhead',(9.843,10.54,6.67,6.999,1.48,2.31),ivory,.006)
-for x0,x1 in [(9.851,10.184),(10.19,10.531)]:
-    box('Laundry flat upper front',(x0,x1,7.001,7.022,1.49,2.303),ivory,.004)
+    if obj.name.startswith(('MasterVanity','MasterBasin')):
+        obj.location += point(2.61,6.77,0)-point(3.25,6.92,0)
+toilet_old=point(3.16,7.67,0)
+toilet_new=point(2.91,7.62,0)
+toilet_motion=Matrix.Translation(toilet_new) @ Matrix.Rotation(-math.pi/2,4,'Z') @ Matrix.Translation(-toilet_old)
+for obj in bpy.data.objects:
+    if obj.name.startswith('MasterToilet'):
+        obj.matrix_world=toilet_motion @ obj.matrix_world
+
+# Both machines open toward dining; the upper wine cabinet has its own shallow carcass.
+box('Dining laundry left gable',(3.31,4.057,6.52,6.554,.02,2.40),ivory)
+box('Dining laundry right gable',(3.31,4.057,8.031,8.070,.02,2.40),ivory)
+box('Dining laundry limestone counter',(3.31,4.073,6.52,8.07,.903,.94),bone,.008)
+box('Wine cabinet painted back',(3.316,3.345,6.556,8.03,1.36,2.40),walnut)
+for z in [1.366,1.685,2.009,2.371]:
+    box('Wine cabinet warm wood shelf',(3.339,3.707,6.555,8.032,z,z+.026),pale_oak)
+box('Wine cabinet center partition',(3.344,3.705,7.28,7.304,1.39,2.372),pale_oak)
+for y in [6.63,6.73,6.83,7.40,7.50,7.61]:
+    cylinder('Wine display bottle',3.565,y,1.506,.035,.19,slate)
+    cylinder('Wine display neck',3.565,y,1.627,.013,.06,dark)
+for y in [6.62,6.74,7.5,7.61,7.72]:
+    cylinder('Glass stem',3.56,y,1.757,.009,.09,silver)
+    cylinder('Glass bowl',3.56,y,1.828,.030,.07,study_glass)
+box('Wine cabinet LED',(3.683,3.697,6.564,8.02,2.356,2.366),light)
+for y in [6.934,7.665]:
+    box('Laundry appliance body',(3.376,3.981,y-.296,y+.296,.03,.874),fabric,.022)
+    drum=cylinder('Laundry appliance door',3.986,y,.443,.225,.043,dark)
+    drum.rotation_euler.y=math.pi/2
+    lens=cylinder('Laundry appliance porthole',4.010,y,.443,.174,.010,bpy.data.materials['Screen'])
+    lens.rotation_euler.y=math.pi/2
+    box('Laundry appliance controls',(3.982,3.996,y-.235,y+.235,.753,.832),silver,.006)
+    knob=cylinder('Laundry control knob',4.004,y,.791,.028,.017,ivory)
+    knob.rotation_euler.y=math.pi/2
+
+laundry_door_pairs=[]
+for y1,y2 in [(6.557,7.29),(7.294,8.028)]:
+    middle=(y1+y2)/2
+    pair=[]
+    for south,north in [(y1,middle-.002),(middle+.002,y2)]:
+        leaf=box('Dining laundry folding front',(4.055,4.079,south,north,.025,.901),ivory,0)
+        leaf['concept']='Folding front. Operating conditions depend on selected appliance instructions.'
+        pair.append(leaf)
+        for i in range(4):
+            y=south+.052+i*.073
+            cut_box(leaf,(4.049,4.088,y,y+.042,.09,.108))
+        edge=leaf.modifiers.new('Soft panel edges','BEVEL')
+        edge.width=.002
+        edge.segments=2
+    laundry_door_pairs.append((pair,y1,y2))
+
+# Open-floor utility store with adjustable shelving and a tall bay for luggage.
+for z in [.31,.77,1.22,1.66,2.05]:
+    box('Utility adjustable rear shelf',(10.285,10.629,6.674,7.451,z,z+.024),pale_oak)
+for y in [6.692,7.43,8.13]:
+    box('Utility slotted upright',(10.607,10.632,y,y+.018,.098,2.28),silver)
+for y in [7.60,7.83]:
+    box('Utility upright suitcase',(10.29,10.62,y,y+.164,.024,.665),slate,.023)
+box('Utility cleaning tool rack',(9.565,10.074,8.192,8.208,1.38,1.433),pale_oak)
+for x in [9.63,9.87]:
+    cylinder('Utility cleaning handle',x,8.12,.817,.015,1.20,silver)
+
+# The TV niche and flush leaf stay on the living side of the original wall.
+tv_face=9.322
+box('TV wall backing',(9.478,9.681,9.379,12.412,.02,2.418),pale_oak)
+box('TV media plinth',(9.365,9.66,9.40,12.385,.022,.087),dark)
+for i in range(4):
+    y=9.395+i*.748
+    box('TV low push-to-open front',(tv_face,9.499,y,y+.742,.088,.513),ivory,.004)
+box('TV floating limestone ledge',(tv_face,9.687,9.389,12.401,.513,.548),bone,.006)
+box('TV top aligned cabinets',(tv_face,9.684,9.385,12.405,1.97,2.425),ivory,.005)
+for y1,y2 in [(9.385,9.496),(12.277,12.405)]:
+    box('TV niche side panel',(tv_face,9.498,y1,y2,.548,1.97),ivory,.004)
+box('TV recessed display',(9.412,9.475,9.971,11.829,.795,1.865),dark,.021)
+box('TV glass',(9.404,9.413,9.994,11.806,.814,1.847),bpy.data.materials['Screen'],.016)
+box('TV niche light',(9.453,9.471,9.576,12.19,1.961,1.970),light)
+
+# Extend the original doorway reveal to the cabinet face without changing the original opening.
+for y1,y2 in [(8.325,8.500),(9.342,9.38)]:
+    box('Hidden bedroom jamb lining',(tv_face,9.805,y1,y2,.02,2.22),ivory)
+box('Hidden bedroom upper panel',(tv_face,9.823,8.323,9.382,2.222,2.425),ivory,.004)
+hidden_leaf=box('Hidden bedroom flush leaf',(tv_face,9.368,8.502,9.339,.024,2.215),ivory,.003)
+reparent(hidden_leaf,glazing_group)
+box('Housekeeping wall matching facing',(tv_face,9.349,8.206,8.325,.02,2.425),ivory,.003)
 
 # Main desk runs along the west partition and starts beyond the north wall and window reveal.
 box('Office west desk top',(4.39,5.01,1.99,3.71,.723,.75),bone,.010)
@@ -393,24 +490,27 @@ for i in range(4):
     x=10.49+i*.507
     box(f'SE north wardrobe front {i+1}',(x,x+.499,9.054,9.077,.087,2.402),ivory,.004)
 
-# One island for dining and a game board, with three seats on each long side.
-island_x1,island_x2,island_n,island_s=5.58,7.78,7.25,8.25
-box('Game island top',(island_x1,island_x2,island_n,island_s,.716,.758),bone,.021)
-box('Game island rounded storage end',(5.65,6.18,7.575,7.925,.041,.716),walnut,.067)
-for z in [.273,.493]:
-    box('Island north drawer line',(5.70,6.12,7.571,7.577,z,z+.005),silver,.002)
-box('Game island thin outer support',(7.63,7.687,7.452,8.048,.033,.716),walnut,.012)
-for x in [5.97,6.65,7.31]:
-    for y in [6.96,8.54]:
-        box('Island chair seat',(x-.218,x+.218,y-.214,y+.214,.418,.469),fabric,.023)
-        back=y-.217 if y<island_n else y+.217
-        box('Island chair back',(x-.225,x+.225,back-.027,back+.027,.456,.83),blue,.022)
-        for dx in [-.158,.158]:
-            for dy in [-.153,.153]:
-                cylinder('Island chair leg',x+dx,y+dy,.216,.016,.406,silver)
-box('Island table tray',(6.36,6.71,7.54,7.84,.759,.771),slate,.006)
-for y in [7.62,7.76]:
-    cylinder('Island ceramic tumbler',6.516,y,.817,.036,.09,ivory)
+# A cabinet island with an attached lower dining wing.
+island_n,island_s=7.16,8.24
+box('Island full cabinet body',(5.29,6.372,7.21,8.194,.086,.873),walnut,.032)
+box('Island recessed toe-kick',(5.33,6.34,7.246,8.159,.02,.086),dark,.009)
+box('Island stone prep worktop',(5.244,6.424,island_n,island_s,.873,.925),bone,.022)
+for y1,y2 in [(7.226,7.69),(7.696,8.178)]:
+    box('Island concealed storage doors',(5.269,5.295,y1,y2,.087,.853),walnut,.008)
+    box('Island cabinet finger pull',(5.264,5.271,y1+.025,y2-.025,.828,.847),dark,.003)
+box('Attached lower dining worktop',(6.344,8.233,7.218,8.186,.715,.758),pale_oak,.018)
+box('Dining outer inset panel support',(8.082,8.135,7.515,7.885,.029,.715),walnut,.012)
+for x in [6.724,7.313,7.907]:
+    for y in [6.971,8.480]:
+        box('Island chair seat',(x-.212,x+.212,y-.202,y+.202,.418,.469),fabric,.023)
+        back=y-.21 if y<island_n else y+.21
+        box('Island chair back',(x-.214,x+.214,back-.025,back+.025,.456,.818),blue,.022)
+        for dx in [-.153,.153]:
+            for dy in [-.149,.149]:
+                cylinder('Island chair leg',x+dx,y+dy,.216,.015,.406,silver)
+box('Island table tray',(6.925,7.265,7.51,7.81,.759,.771),slate,.006)
+for y in [7.587,7.727]:
+    cylinder('Island ceramic tumbler',7.074,y,.817,.036,.09,ivory)
 
 # Dry-area tile is continuous on a single 800-mm grid through the house.
 dry_rooms=('Living','Kitchen','StudyGames','MasterBedroom','GuestBedroomNW','GuestBedroomSE')
@@ -449,20 +549,23 @@ bpy.context.collection.objects.link(obj)
 attach(obj,'Pearl porcelain joint grid',grout)
 
 assert bearing_snapshot==(tuple(wall.location),tuple(tuple(v.co) for v in wall.data.vertices))
-scene['scheme']='Italian minimalism, walnut and bronze'
+scene['scheme']='Warm understated Italian interiors with a split-height island'
 scene['kitchenNorthWindow']='Confirmed by owner; opening width and sill height are provisional'
-scene['laundryLocation']='Proposed in housekeeping room; confirm plumbing and floor drain'
+scene['laundryLocation']='Conditional recess at east of master bath; confirm partition and plumbing'
 scene['doorFrameHeightM']=2.35
 scene['partitionChange']='+420 mm east, conceptual and subject to wall verification'
 scene['surveyed']=False
-scene['islandSizeM']=[2.20,1.00,.758]
+scene['islandHeightM']=.925
+scene['diningWingHeightM']=.758
+scene['bathRecessM']=bath_old_x-bath_new_x
 scene['studyDoorClearM']=round(5.459-4.542,2)
 scene['kitchenDoorClearM']=round(8.593-7.474,2)
 scene['kitchenParking']='Stack at the dining side of the existing right return, before the entry jamb'
 args=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
 draft='--draft' in args
+render_only=next((arg.split('=',1)[1] for arg in args if arg.startswith('--view=')),None)
 bpy.context.preferences.filepaths.save_version=0
-if not draft:
+if not draft and not render_only:
     bpy.ops.export_scene.gltf(filepath=str(OUT/'island-layout-raw.glb'),export_format='GLB',
                              export_extras=True,export_cameras=False,export_lights=False,
                              use_visible=False,export_apply=True)
@@ -491,7 +594,7 @@ def add_wood_grain(mat):
 
 for wood in [walnut,bpy.data.materials['Wrap | white oak'],bpy.data.materials['Wrap | pale oak']]:
     add_wood_grain(wood)
-if not draft:
+if not draft and not render_only:
     bpy.ops.wm.save_as_mainfile(filepath=str(OUT/'home-21101-island-layout.blend'))
 
 if '--model-only' in args:
@@ -527,11 +630,13 @@ area('Office ceiling wash',(5.18,3.1,2.70),(5.18,3.3,.64),66,1.1,1.7,warm)
 area('Kitchen ceiling wash',(7.9,2.68,2.73),(7.85,2.65,0),104,1.6,3.0,warm)
 area('Dining fill',(6.99,6.62,2.73),(6.93,6.6,.6),140,2.75,2.5,warm)
 area('Living fill',(6.55,10.05,2.73),(6.95,10.05,.6),71,2.8,2.15,warm)
-area('Laundry ceiling fill',(10.06,7.6,2.64),(10.08,7.12,.75),48,1.0,.9,warm)
+area('Laundry cabinet wash',(4.95,7.05,2.68),(3.75,7.30,.90),75,1.18,1.45,warm)
+area('Utility ceiling fill',(10.04,7.43,2.68),(10.40,7.18,.9),38,.86,1.2,warm)
+area('Master bath ceiling fill',(1.68,7.26,2.69),(1.80,7.04,.65),87,1.4,.93,warm)
 area('Master fill',(2.65,9.7,2.73),(2.03,10.83,.75),86,1.95,1.55,warm)
-box('Island silver pendant blade',(5.97,7.40,7.732,7.775,2.123,2.171),silver,.009)
-box('Island pendant light',(6.02,7.35,7.74,7.767,2.114,2.124),light,.004)
-for x in [6.11,7.24]:
+box('Island silver pendant blade',(6.15,7.84,7.732,7.775,2.123,2.171),silver,.009)
+box('Island pendant light',(6.20,7.79,7.74,7.767,2.114,2.124),light,.004)
+for x in [6.26,7.71]:
     cylinder('Pendant suspension',x,7.754,2.477,.004,.617,silver)
 scene.world.use_nodes=True
 world=scene.world.node_tree.nodes['Background']
@@ -559,14 +664,39 @@ scene.render.resolution_x=1800
 scene.render.resolution_y=1125
 scene.render.resolution_percentage=48 if draft else 100
 views={
-    '01-island-and-doors':((4.50,10.15,1.63),(6.79,5.64,1.12),24),
+    '01-island-and-doors':((4.46,10.24,1.65),(6.94,6.34,1.08),22),
     '02-office':((6.18,4.38,1.58),(4.62,2.49,1.18),22),
     '03-master-bedroom':((2.96,8.83,1.60),(1.99,10.92,1.15),20),
     '04-kitchen-door-closed':((6.05,8.20,1.60),(6.67,4.62,1.23),26),
     '05-kitchen-north-window':((7.55,4.38,1.62),(8.35,1.05,1.25),21),
-    '06-laundry':((9.64,8.205,1.51),(10.17,7.025,.77),16),
+    '06-laundry':((5.172,7.41,1.44),(3.93,7.30,1.22),16),
+    '07-tv-hidden-door':((5.31,10.85,1.59),(9.34,9.96,1.18),23),
+    '08-tv-hidden-door-open':((5.31,10.85,1.59),(9.34,9.96,1.18),23),
+    '09-laundry-open':((5.172,7.41,1.44),(3.93,7.30,1.22),16),
+    '10-utility-store':((9.59,7.72,1.51),(10.60,7.45,1.13),16),
+    '11-master-bath':((2.12,8.00,1.45),(1.85,6.85,.90),15),
 }
+def swing_about(obj, pivot, angle):
+    obj.matrix_world = Matrix.Translation(pivot) @ Matrix.Rotation(angle,4,'Z') @ Matrix.Translation(-pivot) @ obj.matrix_world
+
+
+laundry_closed_matrices=[(leaf,leaf.matrix_world.copy()) for pair,_,_ in laundry_door_pairs for leaf in pair]
 for name,(location,target,lens) in views.items():
+    if render_only and name!=render_only:
+        continue
+    for leaf,matrix in laundry_closed_matrices:
+        leaf.matrix_world=matrix
+    if name=='08-tv-hidden-door-open':
+        swing_about(hidden_leaf,point(9.346,9.312,0),-math.pi/2)
+    if name=='09-laundry-open':
+        north_pair,y1,y2=laundry_door_pairs[0]
+        south_pair,y3,y4=laundry_door_pairs[1]
+        swing_about(north_pair[0],point(4.067,y1,0),math.pi/2)
+        swing_about(north_pair[1],point(4.067,(y1+y2)/2,0),math.pi/2)
+        north_pair[1].location.y+=(y2-y1)/2-.033
+        swing_about(south_pair[1],point(4.067,y4,0),-math.pi/2)
+        swing_about(south_pair[0],point(4.067,(y3+y4)/2,0),-math.pi/2)
+        south_pair[0].location.y-=(y4-y3)/2-.033
     close=name=='04-kitchen-door-closed'
     for parked,closed in [(open_group,closed_group),(study_open,study_closed)]:
         for obj in parked.children:
@@ -580,7 +710,7 @@ for name,(location,target,lens) in views.items():
     cam.data.clip_start=.05
     cam.rotation_euler=(point(*target)-cam.location).to_track_quat('-Z','Y').to_euler()
     scene.camera=cam
-    scene.render.resolution_x=1125 if name=='06-laundry' else 1800
+    scene.render.resolution_x=1125 if name in ('06-laundry','09-laundry-open','10-utility-store','11-master-bath') else 1800
     scene.render.filepath=str(OUT/(name+('-draft' if draft else '')+'.png'))
     bpy.ops.render.render(write_still=True)
 
