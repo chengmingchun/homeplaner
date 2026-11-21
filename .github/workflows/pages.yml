@@ -35,7 +35,7 @@ jobs:
           path: _site
       - name: Wait for the Pages artifact
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           endpoint="repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID/artifacts"
           for attempt in {1..10}; do
