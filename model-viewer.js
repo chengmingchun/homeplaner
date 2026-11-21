@@ -25,13 +25,13 @@ const focusAreas={
  living:[6.7,9.8,5,9,9,10],
  north:[4.7,3,2,8,7,8],
  kitchen:[8.1,2.7,3,8,8,8],
- bar:[6.86,4.71,-3,3.8,5,4.8,.95],
+ bar:[6.93,4.63,-2.6,5.0,6.5,5.4,1.05],
  bath:[2.02,7.30,3,6,4,5],
  utility:[10.05,7.48,-3,5,4,5],
  media:[9.25,10.15,-6,4,2.8,6.9,1.05],
  laundry:[4.08,7.30,6,4,.65,5.8,1.10],
  island:[6.60,6.25,-3.6,8.5,9.6,8.4,.62],
- office:[5.46,3.08,3.8,7.1,6.4,4.5,.72],
+ office:[5.49,2.76,1.9,8.3,6.5,4.8,.80],
  master:[2.10,10.30,3.1,7,5.5,5.8,.62]
 };
 function focus(view){
@@ -50,7 +50,7 @@ function focus(view){
  camera.lookAt(controls.target);controls.update();
 }
 function setCut(){renderer.shadowMap.needsUpdate=true;for(const item of vertical){item.obj.scale.copy(item.scale);item.obj.position.copy(item.position);if(cut){item.obj.scale.y*=.34;item.obj.position.y*=.34;}}$('walls').textContent=cut?'恢复完整墙高':'低墙看布置';$('walls').classList.toggle('active',cut);$('walls').setAttribute('aria-pressed',String(cut));}
-const modelPath='./models/island-layout/island-layout.glb?v=warm-italian-1';
+const modelPath='./models/island-layout/island-layout.glb?v=warm-italian-2';
 new GLTFLoader().load(modelPath,gltf=>{
  const model=gltf.scene;scene.add(model);
  model.traverse(o=>{if(o.isMesh){o.castShadow=!o.material.transparent;o.receiveShadow=true;}

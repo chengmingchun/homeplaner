@@ -156,7 +156,7 @@ def partition_glass(name, color, roughness, alpha):
 
 
 glass = partition_glass('Clear kitchen safety glazing','E6DDD0',.12,.11)
-study_glass = partition_glass('Light smoked privacy glazing','AE9A84',.29,.37)
+study_glass = partition_glass('Warm clear study glazing','E4D9C8',.17,.15)
 
 prefixes=('Boardgame','MapLand','CardDeck','GameChair','DeskNorth','DeskDrawers',
           'Desk return','Study desk return','Study ventilated','NAS front','Keyboard',
@@ -167,7 +167,11 @@ prefixes=('Boardgame','MapLand','CardDeck','GameChair','DeskNorth','DeskDrawers'
           'Kitchen stone splashback','Kitchen drawer','Kitchen upper','Kitchen overhead',
           'Kitchen undercabinet','Kitchen cutting','Kitchen dry-goods','Kitchen jar',
           'Coffee end display','Coffee end shelf','TVConsole','TVBlackFrame','TVDisplay',
-          'Door_GuestSE_West','WasherBody','WasherGlass','WasherBlackHatch')
+          'Door_GuestSE_West','WasherBody','WasherGlass','WasherBlackHatch',
+          'Study oak','Kitchen oak','Dining oak','Top edge study','Top edge kitchen','Top edge wall end',
+          'Study low cabinet','Study lower front','Study lower pull','Study upper cabinet','Study overhead',
+          'Study open shelf','Study shelf light','Study game box','Study boardgame box',
+          'Cabinet coffee top','Coffee cabinet')
 for obj in list(bpy.data.objects):
     if obj.name.startswith(prefixes) and not obj.get('wall'):
         bpy.data.objects.remove(obj,do_unlink=True)
@@ -263,16 +267,56 @@ box('North integrated dishwasher control',(7.045,7.605,.836,.841,.793,.827),ivor
 box('Walnut cutting block',(8.61,8.943,1.21,1.625,.913,.929),ivory,.012)
 box('Dark serving bowl base',(7.02,7.265,.365,.600,.915,.960),walnut,.022)
 
-# Add the shallow third face of the wall-end cabinetry, keeping the L as the main work zone.
+# The bearing wall reads as one piece of pale oak joinery on all three faces.
 pale_oak=bpy.data.materials['Wrap | pale oak']
-box('Bearing wall shallow kitchen carcass',(6.996,7.299,1.16,4.407,.087,.874),pale_oak)
-box('Bearing wall shallow kitchen counter',(6.992,7.329,1.145,4.42,.875,.912),bone,.008)
-box('Bearing wall kitchen recessed plinth',(7.002,7.255,1.17,4.392,.021,.087),dark)
+wrap_top, wrap_head = .912, 2.35
+box('Wrap study full-height veneer',(6.722,6.749,1.545,4.629,.024,wrap_head),pale_oak,.002)
+box('Wrap kitchen full-height veneer',(6.971,6.999,1.145,4.746,.024,wrap_head),pale_oak,.002)
+box('Wrap study doorway return',(6.442,6.749,4.616,4.643,.024,wrap_head),pale_oak,.002)
+box('Wrap dining continuous end veneer',(6.442,7.448,4.809,4.838,.021,wrap_head),pale_oak,.003)
+
+# One continuous slab from the kitchen run to the rounded dining face.
+coffee_outline=[(6.443,4.825),(6.995,4.825),(6.995,1.145),(7.329,1.145),
+                (7.329,4.818),(7.447,4.818),(7.447,5.052)]
+for cx,cy,start,stop in [(7.373,5.052,0,90),(6.517,5.052,90,180)]:
+    coffee_outline.extend((cx+.074*math.cos(math.radians(start+(stop-start)*i/8)),
+                           cy+.074*math.sin(math.radians(start+(stop-start)*i/8))) for i in range(9))
+slab('Wrap kitchen and coffee continuous stone',coffee_outline,.875,.037,bone)['wrapsWallEnd']=True
+box('Wrap kitchen base',(6.997,7.298,1.16,4.792,.086,.875),pale_oak)
+box('Wrap kitchen recessed plinth',(7.001,7.258,1.172,4.795,.022,.086),dark)
 for i in range(5):
-    y=1.167+i*.648
-    box('Bearing wall kitchen oak door',(7.298,7.318,y,y+.632,.09,.845),pale_oak,.004)
-    box('Bearing wall kitchen shadow pull',(7.317,7.324,y+.026,y+.603,.818,.839),silver,.002)
-box('Shallow cabinet link to coffee return',(6.993,7.328,4.420,4.495,.875,.912),bone,.005)
+    y=1.166+i*.724
+    box('Wrap kitchen flush oak front',(7.298,7.318,y,y+.718,.09,.84),pale_oak,.004)
+box('Wrap kitchen recessed finger rail',(7.303,7.323,1.166,4.782,.84,.862),dark,.002)
+
+box('Wrap dining base',(6.461,7.430,4.835,5.084,.086,.875),pale_oak)
+box('Wrap dining recessed plinth',(6.484,7.410,4.838,5.047,.022,.086),dark)
+for x1,x2 in [(6.463,6.944),(6.949,7.429)]:
+    box('Wrap dining flush oak front',(x1,x2,5.080,5.103,.09,.84),pale_oak,.004)
+box('Wrap dining recessed finger rail',(6.465,7.430,5.082,5.102,.84,.862),dark,.002)
+box('Wrap cooking-side plinth corner',(7.256,7.412,4.79,4.87,.022,.086),dark)
+
+# Align the study counter and storage breaks to the kitchen and coffee faces.
+box('Wrap study drawer carcass',(6.457,6.725,2.485,4.604,.086,.875),pale_oak)
+# The shallow jog at the back of the glass pocket preserves the leaf's travel.
+slab('Wrap study matching counter',[(6.408,2.469),(6.729,2.469),(6.729,4.623),
+                                   (6.452,4.623),(6.452,4.553),(6.408,4.553)],
+     .875,wrap_top-.875,bone)
+box('Wrap study recessed plinth',(6.493,6.724,2.494,4.597,.022,.086),dark)
+for i in range(4):
+    y=2.494+i*.526
+    box('Wrap study flush oak front',(6.431,6.455,y,y+.519,.09,.84),pale_oak,.004)
+box('Wrap study recessed finger rail',(6.426,6.449,2.498,4.59,.84,.862),dark,.002)
+box('Wrap study wall cabinets',(6.489,6.724,2.578,4.60,1.736,wrap_head),pale_oak)
+for i in range(4):
+    y=2.583+i*.503
+    box('Wrap study upper flush fronts',(6.466,6.488,y,y+.498,1.752,wrap_head-.007),pale_oak,.004)
+for z in [1.195,1.507]:
+    box('Wrap study open shelf',(6.485,6.723,2.587,4.59,z,z+.023),pale_oak,.004)
+box('Wrap study ambient strip',(6.485,6.499,2.605,4.573,1.728,1.736),light,.002)
+for i in range(7):
+    y=3.67+i*.069
+    box('Wrap study book',(6.52,6.694,y,y+.050,1.22,1.385+(i%3)*.024),[ivory,slate,walnut][i%3])
 
 # Recess the bathroom east-side partition only inside the existing bath.
 bath_old_x,bath_new_x=3.91,3.245
@@ -373,33 +417,67 @@ hidden_leaf=box('Hidden bedroom flush leaf',(tv_face,9.368,8.502,9.339,.024,2.21
 reparent(hidden_leaf,glazing_group)
 box('Housekeeping wall matching facing',(tv_face,9.349,8.206,8.325,.02,2.425),ivory,.003)
 
-# Main desk runs along the west partition and starts beyond the north wall and window reveal.
-box('Office west desk top',(4.39,5.01,1.99,3.71,.723,.75),bone,.010)
-box('Office west drawers',(4.408,4.97,2.02,2.48,.035,.722),ivory,.008)
-for z in [.25,.48,.70]:
-    box('Office drawer reveal',(4.971,4.975,2.04,2.462,z-.002,z+.002),silver,.001)
-box('Office far leg',(4.411,4.974,3.637,3.678,.035,.722),ivory)
-box('Office cable tray',(4.415,4.55,2.50,3.52,.62,.72),silver,.006)
-for y in [2.55,3.18]:
-    cylinder('Desk monitor pole',4.535,y,.87,.019,.24,dark)
-    box('Desk monitor arm',(4.54,4.67,y-.035,y+.035,.967,1.005),dark,.008)
-    box('Desk monitor',(4.651,4.693,y-.275,y+.275,.897,1.211),dark,.012)
-    box('Desk monitor display',(4.693,4.697,y-.260,y+.260,.913,1.196),blue,.002)
-box('Keyboard',(4.78,4.929,2.65,3.09,.752,.766),dark,.008)
-box('Keyboard pad',(4.747,4.997,2.595,3.273,.7505,.752),slate,.001)
-box('Desk mouse',(4.829,4.91,3.164,3.225,.753,.775),silver,.009)
-box('Office chair seat',(5.14,5.60,2.62,3.10,.405,.49),fabric,.034)
-box('Office chair back',(5.529,5.619,2.63,3.095,.49,.925),slate,.034)
-cylinder('Office chair pedestal',5.38,2.86,.257,.045,.33,silver)
+# Aligned west-wall worktop and a low north counter that stays below the sill.
+screen_mat=bpy.data.materials['Screen']
+desk_y1,desk_y2=1.545,4.262
+box('Office wall-to-wall west desk',(4.381,5.057,desk_y1,desk_y2,.721,.750),pale_oak,.009)
+box('Office south drawers',(4.394,5.020,3.843,4.234,.034,.721),ivory,.008)
+for z in [.254,.470,.701]:
+    box('Office drawer reveal',(5.020,5.024,3.86,4.217,z-.002,z+.002),silver,.001)
+box('Office north inset leg',(4.394,5.017,1.677,1.722,.034,.721),ivory,.007)
+box('Office attached cable tray',(4.397,4.530,1.76,3.79,.635,.718),dark,.006)
+for y in [2.610,3.276]:
+    cylinder('Dual monitor arm post',4.489,y,.865,.018,.227,dark)
+    box('Dual monitor arm lower link',(4.482,4.619,y-.018,y+.018,.966,1.001),dark,.007)
+    box('Dual monitor arm upper link',(4.593,4.684,y-.020,y+.020,1.031,1.066),dark,.007)
+    cylinder('Dual monitor arm hinged elbow',4.605,y,1.013,.020,.071,dark)
+    box('Office display casing',(4.670,4.714,y-.310,y+.310,.921,1.279),dark,.011)
+    box('Office display panel',(4.714,4.719,y-.296,y+.296,.940,1.258),screen_mat,.003)
+box('Office desk mat',(4.741,5.015,2.631,3.235,.750,.753),slate,.004)
+box('Office keyboard',(4.805,4.939,2.668,3.036,.753,.768),dark,.007)
+box('Office mouse',(4.827,4.908,3.107,3.171,.753,.777),silver,.008)
+box('Office PC tower',(4.407,4.657,3.344,3.787,.065,.556),dark,.016)
+box('Office PC mesh face',(4.657,4.664,3.365,3.768,.084,.522),silver,.005)
+
+box('Console north low return desk',(5.057,6.671,1.545,2.150,.721,.750),pale_oak,.006)
+box('Console return east support',(6.632,6.668,1.56,2.136,.032,.721),ivory,.006)
+box('Console return ventilated tray',(5.474,6.416,1.601,1.991,.538,.562),pale_oak,.006)
+box('PS5 main body',(5.609,6.115,1.650,1.886,.583,.652),dark,.009)
+for z in [.568,.652]:
+    box('PS5 light shell',(5.591,6.132,1.642,1.901,z,z+.017),fabric,.009)
+box('Switch dock',(5.288,5.463,1.608,1.679,.750,.813),dark,.011)
+box('Docked Switch',(5.246,5.506,1.623,1.653,.787,.844),screen_mat,.009)
+for x,mat in [(5.243,slate),(5.487,blue)]:
+    box('Switch controller',(x,x+.026,1.623,1.655,.787,.844),mat,.006)
+for x in [5.46,5.65]:
+    box('Gamepad on window desk',(x,x+.137,1.944,2.029,.750,.78),fabric,.015)
+
+# A swivel arm puts the third screen to the east of the window opening.
+console_center=point(6.485,1.943,0)
+console_rotation=Matrix.Rotation(math.radians(24),4,'Z')
+console_transform=Matrix.Translation(console_center) @ console_rotation @ Matrix.Translation(-console_center)
+cylinder('Console swivel mount',6.573,1.901,.867,.022,.23,dark)
+box('Console mount arm',(6.457,6.585,1.881,1.920,.970,1.009),dark,.008)
+for name,bounds,mat in [
+    ('Console third screen casing',(6.457,6.505,1.646,2.240,.86,1.207),dark),
+    ('Console third screen display',(6.452,6.457,1.659,2.227,.873,1.191),screen_mat),
+]:
+    screen=box(name,bounds,mat,.009)
+    screen.matrix_world=console_transform @ screen.matrix_world
+
+box('Office chair seat',(5.137,5.597,2.688,3.168,.405,.49),fabric,.034)
+box('Office chair back',(5.526,5.616,2.698,3.163,.49,.925),slate,.034)
+cylinder('Office chair pedestal',5.377,2.928,.257,.045,.33,silver)
 for i in range(5):
     angle=i*math.tau/5
-    plate=box('Office chair base arm',(5.38,5.655,2.838,2.882,.064,.102),silver,.009)
-    plate.location=point(5.38+.1375*math.cos(angle),2.86+.1375*math.sin(angle),.083)
+    plate=box('Office chair base arm',(5.377,5.652,2.906,2.950,.064,.102),silver,.009)
+    plate.location=point(5.377+.1375*math.cos(angle),2.928+.1375*math.sin(angle),.083)
     plate.rotation_euler.z=-angle
-    cylinder('Office caster',5.38+.258*math.cos(angle),2.86+.258*math.sin(angle),.047,.028,.047,dark)
-box('Office open network cubby',(6.49,6.713,3.34,3.65,.76,1.016),silver,.008)
-for z in [.812,.861,.91,.959]:
-    box('Office ventilation slots',(6.484,6.491,3.39,3.60,z,z+.012),dark,.003)
+    cylinder('Office caster',5.377+.258*math.cos(angle),2.928+.258*math.sin(angle),.047,.028,.047,dark)
+box('Ventilated NAS enclosure',(6.488,6.696,3.115,3.420,1.225,1.472),silver,.008)
+for z in [1.269,1.318,1.367,1.416]:
+    box('NAS front cooling slots',(6.484,6.489,3.152,3.388,z,z+.009),dark,.002)
+box('Mac mini server',(6.508,6.651,3.446,3.589,1.224,1.269),silver,.008)
 
 # Matching door heads, recessed guides and jambs. All sliding motion stays on the room side.
 def sliding_leaf(parent,name,x1,x2,y,mat,pull=False):
@@ -433,8 +511,7 @@ track('Kitchen',7.467,9.203,4.809,4.931)
 for i,(y,closed_x) in enumerate([(4.839,7.472),(4.889,8.046)],1):
     sliding_leaf(open_group,f'Kitchen parked leaf {i}',8.593,9.188,y,glass,i==1)
     sliding_leaf(closed_group,f'Kitchen closed leaf {i}',closed_x,closed_x+.595,y,glass,i==1)
-reparent(box('Kitchen finished wall side lining',(6.974,7.474,4.743,4.815,.917,2.35),ivory,.005),glazing_group)
-reparent(box('Kitchen coffee side jamb',(7.449,7.474,4.813,4.925,.02,2.35),walnut,.003),glazing_group)
+reparent(box('Kitchen coffee side jamb',(7.449,7.474,4.813,4.925,.02,2.35),pale_oak,.003),glazing_group)
 reparent(box('Kitchen return stop and seal',(8.601,8.644,4.808,4.817,.019,2.35),dark,.002),glazing_group)
 wall_box('Kitchen matching upper filler',(7.445,9.21,4.809,4.934,2.35,2.8))
 reparent(box('Kitchen concealed guide behind return',(8.610,8.695,4.820,4.907,.018,.026),dark,.002),glazing_group)
@@ -447,9 +524,13 @@ for group_closed in [closed_group,study_closed]:
 # Keep the console return shallow so it clears the entry lanes.
 for obj in bpy.data.objects:
     if obj.name.startswith('Coffee machine'):
-        obj.location.x-=.34
+        obj.location.x-=.173
+        obj.location.y-=.043
+        obj.location.z+=.012
     if obj.name.startswith(('Coffee ceramic cup','Coffee in cup')):
-        obj.location.x-=.008
+        obj.location.x+=.004
+        obj.location.y-=.011
+        obj.location.z+=.012
 
 # Three bedrooms share a west-oriented bed and flat-front storage.
 def bedroom_bed(name,head_x,center_y,width,length,head_height):
@@ -555,6 +636,8 @@ scene['laundryLocation']='Conditional recess at east of master bath; confirm par
 scene['doorFrameHeightM']=2.35
 scene['partitionChange']='+420 mm east, conceptual and subject to wall verification'
 scene['surveyed']=False
+scene['westDeskLengthM']=desk_y2-desk_y1
+scene['wrapFinish']='Continuous pale oak facing and aligned stone counters, intact bearing wall'
 scene['islandHeightM']=.925
 scene['diningWingHeightM']=.758
 scene['bathRecessM']=bath_old_x-bath_new_x
@@ -563,7 +646,8 @@ scene['kitchenDoorClearM']=round(8.593-7.474,2)
 scene['kitchenParking']='Stack at the dining side of the existing right return, before the entry jamb'
 args=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
 draft='--draft' in args
-render_only=next((arg.split('=',1)[1] for arg in args if arg.startswith('--view=')),None)
+render_only=next((arg.split('=',1)[1].split(',') for arg in args if arg.startswith('--view=')),None)
+render_selected=next((arg.split('=',1)[1].split(',') for arg in args if arg.startswith('--render=')),None)
 bpy.context.preferences.filepaths.save_version=0
 if not draft and not render_only:
     bpy.ops.export_scene.gltf(filepath=str(OUT/'island-layout-raw.glb'),export_format='GLB',
@@ -665,16 +749,17 @@ scene.render.resolution_y=1125
 scene.render.resolution_percentage=48 if draft else 100
 views={
     '01-island-and-doors':((4.46,10.24,1.65),(6.94,6.34,1.08),22),
-    '02-office':((6.18,4.38,1.58),(4.62,2.49,1.18),22),
+    '02-office':((6.199,4.405,1.65),(5.19,2.13,.96),18),
     '03-master-bedroom':((2.96,8.83,1.60),(1.99,10.92,1.15),20),
     '04-kitchen-door-closed':((6.05,8.20,1.60),(6.67,4.62,1.23),26),
-    '05-kitchen-north-window':((7.55,4.38,1.62),(8.35,1.05,1.25),21),
+    '05-kitchen-north-window':((7.67,4.38,1.62),(8.14,1.08,1.18),20),
     '06-laundry':((5.172,7.41,1.44),(3.93,7.30,1.22),16),
     '07-tv-hidden-door':((5.31,10.85,1.59),(9.34,9.96,1.18),23),
     '08-tv-hidden-door-open':((5.31,10.85,1.59),(9.34,9.96,1.18),23),
     '09-laundry-open':((5.172,7.41,1.44),(3.93,7.30,1.22),16),
     '10-utility-store':((9.59,7.72,1.51),(10.60,7.45,1.13),16),
     '11-master-bath':((2.12,8.00,1.45),(1.85,6.85,.90),15),
+    '12-wall-wrap':((5.90,7.55,1.61),(6.91,4.63,1.26),22),
 }
 def swing_about(obj, pivot, angle):
     obj.matrix_world = Matrix.Translation(pivot) @ Matrix.Rotation(angle,4,'Z') @ Matrix.Translation(-pivot) @ obj.matrix_world
@@ -682,7 +767,7 @@ def swing_about(obj, pivot, angle):
 
 laundry_closed_matrices=[(leaf,leaf.matrix_world.copy()) for pair,_,_ in laundry_door_pairs for leaf in pair]
 for name,(location,target,lens) in views.items():
-    if render_only and name!=render_only:
+    if (render_only or render_selected) and name not in (render_only or render_selected):
         continue
     for leaf,matrix in laundry_closed_matrices:
         leaf.matrix_world=matrix
