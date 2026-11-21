@@ -21,9 +21,14 @@ jobs:
       - uses: actions/configure-pages@v5
       - name: Prepare website
         run: |
-          mkdir -p _site
+          mkdir -p _site/models/island-layout _site/renders/{20261108,20261108-ideal}
           cp index.html model.html model-viewer.js _site/
-          cp -r models vendor renders _site/
+          cp -r vendor _site/
+          cp models/island-layout/*.{glb,blend,png} _site/models/island-layout/
+          cp model.html _site/planning.html
+          cp model.html _site/index.backup.html
+          cp model.html _site/renders/20261108/index.html
+          cp model.html _site/renders/20261108-ideal/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

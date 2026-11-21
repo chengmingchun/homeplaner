@@ -17,24 +17,6 @@ const ground=new THREE.Mesh(new THREE.PlaneGeometry(45,45),new THREE.ShadowMater
 let cut=false;const vertical=[];
 const wallAttachments=new Set(['Doors','Glazing','Proposed_fixed_glass','KitchenDoorParked',
  'KitchenDoorClosed','StudyDoorParked','StudyDoorClosed']);
-const scheme=new URLSearchParams(location.search).get('scheme');
-const cabinetScheme=scheme==='wall-cabinet';
-const islandScheme=scheme==='island-layout';
-if(cabinetScheme||islandScheme){
- $('page-title').textContent=islandScheme?'意式岛台与双推拉门':'承重墙包柜方案';
- $('layout-link').href='./';
- $('layout-link').textContent='原户型';
- $('scheme-link').hidden=true;
- $(islandScheme?'island-description':'scheme-description').hidden=false;
- $('plan-description').hidden=true;
- if(islandScheme){
-  $('view').querySelector('[value="kitchen"]').textContent='L 型厨房';
-  $('view').querySelector('[value="utility"]').textContent='家政间与洗衣区';
- }
- $('view').insertAdjacentHTML('beforeend',islandScheme
-  ? '<option value="island">岛台与双门</option><option value="office">电竞间</option><option value="master">主卧</option>'
-  : '<option value="cabinet">包柜整体</option><option value="cabinetStudy">电竞收纳侧</option><option value="cabinetKitchen">厨房备餐侧</option>');
-}
 const plan=(x,z,h=0)=>new THREE.Vector3(x-6.425,h,z-7.05);
 function resize(){const w=host.clientWidth,h=host.clientHeight;renderer.setSize(w,h,false);viewportAspect=w/h;span=Math.max(fitHeight,fitWidth/viewportAspect);frustum();}
 new ResizeObserver(resize).observe(host);resize();
@@ -46,9 +28,6 @@ const focusAreas={
  bar:[6.86,4.71,-3,3.8,5,4.8,.95],
  bath:[2.02,7.30,3,6,4,5],
  utility:[10.05,7.48,-3,5,4,5],
- cabinet:[6.85,4.95,-4,5.8,9,7.7,.9],
- cabinetStudy:[6.35,3.15,-5,4,4.2,4.6,1.15],
- cabinetKitchen:[7.23,3.25,5,4,5,4.9,1.15],
  island:[6.60,6.25,-3.6,8.5,9.6,8.4,.62],
  office:[5.46,3.08,3.8,7.1,6.4,4.5,.72],
  master:[2.10,10.30,3.1,7,5.5,5.8,.62]
@@ -69,38 +48,28 @@ function focus(view){
  camera.lookAt(controls.target);controls.update();
 }
 function setCut(){renderer.shadowMap.needsUpdate=true;for(const item of vertical){item.obj.scale.copy(item.scale);item.obj.position.copy(item.position);if(cut){item.obj.scale.y*=.34;item.obj.position.y*=.34;}}$('walls').textContent=cut?'恢复完整墙高':'低墙看布置';$('walls').classList.toggle('active',cut);$('walls').setAttribute('aria-pressed',String(cut));}
-const modelPaths={
- 'island-layout':'./models/island-layout/island-layout.glb?v=italian-2',
- 'wall-cabinet':'./models/wall-cabinet/wall-cabinet.glb'
-};
-const modelPath=modelPaths[scheme]||'./models/20261121/home-21101.glb';
+const modelPath='./models/island-layout/island-layout.glb?v=italian-2';
 new GLTFLoader().load(modelPath,gltf=>{
  const model=gltf.scene;scene.add(model);
  model.traverse(o=>{if(o.isMesh){o.castShadow=!o.material.transparent;o.receiveShadow=true;}
   if(o.userData.wall||wallAttachments.has(o.parent?.name))vertical.push({obj:o,scale:o.scale.clone(),position:o.position.clone()});
  });
- if(islandScheme){
-  for(const [id,prefix,label] of [['kitchen-door','Kitchen','厨房门'],['study-door','Study','电竞间门']]){
-   const parked=model.getObjectByName(prefix+'DoorParked');
-   const closed=model.getObjectByName(prefix+'DoorClosed');
-   if(!parked||!closed)continue;
-   const button=$(id);
-   closed.visible=false;
-   button.hidden=false;
-   button.onclick=()=>{
-    closed.visible=!closed.visible;
-    parked.visible=!closed.visible;
-    button.textContent=(closed.visible?'打开':'关闭')+label;
-    button.setAttribute('aria-pressed',String(closed.visible));
-    renderer.shadowMap.needsUpdate=true;
-   };
-  }
+ for(const [id,prefix,label] of [['kitchen-door','Kitchen','厨房门'],['study-door','Study','电竞间门']]){
+  const parked=model.getObjectByName(prefix+'DoorParked');
+  const closed=model.getObjectByName(prefix+'DoorClosed');
+  if(!parked||!closed)continue;
+  const button=$(id);
+  closed.visible=false;
+  button.hidden=false;
+  button.onclick=()=>{
+   closed.visible=!closed.visible;
+   parked.visible=!closed.visible;
+   button.textContent=(closed.visible?'打开':'关闭')+label;
+   button.setAttribute('aria-pressed',String(closed.visible));
+   renderer.shadowMap.needsUpdate=true;
+  };
  }
- if(cabinetScheme||islandScheme){
-  cut=true;
-  $('view').value=islandScheme?'island':'cabinet';
-  focus($('view').value);
- }else home();
+ cut=true;
  setCut();
  $('loading').classList.add('hidden');
 },e=>{if(e.total)$('progress').textContent=`已载入 ${Math.min(100,Math.round(e.loaded/e.total*100))}%`;},e=>{console.error('MODEL_LOAD_FAILED',e);$('loadtitle').textContent='模型暂时没有载入成功';$('progress').classList.add('error');$('progress').textContent='请刷新页面重试。';});
